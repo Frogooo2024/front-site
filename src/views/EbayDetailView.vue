@@ -1,0 +1,587 @@
+<script setup lang="ts">
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
+
+import OtherHeaderLight from '../components/OtherHeaderLight.vue'
+import MovePageComponent from '../components/MorePageComponent.vue'
+import HeaderComponent from '../components/HeaderComponent.vue'
+import FooterComponent from '@/components/FooterComponent.vue'
+import { useUserIdStore } from '@/stores/userId'
+import useIsMobile from '../hooks/useIsMobile'
+import { useI18n } from 'vue-i18n'
+import { showToast } from 'vant'
+
+import 'vant/lib/index.css'
+
+const showMorePage = ref(false)
+const { userId } = useUserIdStore()
+const isMobile = useIsMobile()
+
+const { t } = useI18n()
+
+onMounted(() => {
+  document.body.classList.add('background-gray')
+})
+
+onUnmounted(() => {
+  document.body.classList.remove('background-gray')
+})
+
+const onMoreButtonClicked = () => {
+  showMorePage.value = true
+}
+const onCloseButtonClicked = () => {
+  showMorePage.value = false
+}
+const whatsAppClicked = () => {
+  window.open('https://wa.me/message/UGN2RVXLNV4LH1', '_blank')
+}
+
+const address = reactive({
+  userId: userId,
+  streetOne: '3 Lorong Bakar Batu',
+  streetTwo: 'Brightway building #02-04B',
+  postalCode: '348741',
+  number: '8385 0022'
+})
+
+const copyBtnClicked = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text)
+    showToast({
+      message: t('Frogooo.SuccessfulCopy'),
+      position: 'bottom'
+    })
+  } catch (err) {
+    showToast({
+      message: t('Frogooo.CopyFailure'),
+      position: 'bottom'
+    })
+  }
+}
+
+const viewPageClicked = () => {
+  if (showMorePage.value) {
+    showMorePage.value = false
+  }
+}
+</script>
+
+<template>
+  <div class="ebay-detial-view">
+    <MovePageComponent v-if="showMorePage" @close-button-clicked="onCloseButtonClicked" />
+    <OtherHeaderLight
+      @more-button-clicked="onMoreButtonClicked"
+      :hasBackgroundColor="true"
+      v-if="isMobile"
+    >
+    </OtherHeaderLight>
+    <HeaderComponent backgroundColor="white" :lightIcon="true" v-else />
+    <div v-if="isMobile" @click="viewPageClicked">
+      <section class="select-country">
+        <h3>{{ $t('Frogooo.StartOverseasShopping') }}</h3>
+        <img src="../assets/icons/whats_app.svg" alt="" @click="whatsAppClicked" />
+      </section>
+      <div class="step-container">
+        <div class="step">{{ $t('Frogooo.Step', { number: 1 }) }}</div>
+        <section class="select-address-container">
+          <p class="select-address">
+            {{ $t('Frogooo.SelectCountry', { brand: 'Ebay', app: isMobile ? 'App' : 'website' }) }}
+          </p>
+        </section>
+        <section class="first-use">
+          <div class="first-use-image">
+            <img src="../assets/icons/ebay_detail.png" alt="" />
+          </div>
+        </section>
+      </div>
+      <section class="shipping-container">
+        <div class="step">{{ $t('Frogooo.Step', { number: 2 }) }}</div>
+        <div class="shipping-information">
+          <h1 class="shipping-title">
+            {{
+              $t('Frogooo.followingInformation', {
+                brand: 'Ebay',
+                app: isMobile ? 'App' : 'website'
+              })
+            }}
+          </h1>
+          <div class="shipping-detail">
+            <img class="tips" src="../assets/icons/tips.svg" alt="" />
+            <p class="shipping-description">{{ $t('Frogooo.Recipient', { id: userId }) }}</p>
+          </div>
+          <div class="shipping-detail">
+            <img class="tips" src="../assets/icons/tips.svg" alt="" />
+            <p class="shipping-description">{{ $t('Frogooo.ShippingAddress') }}</p>
+          </div>
+        </div>
+        <div class="shipping-country">
+          <div class="country-region">
+            <div class="country-reion-detail">
+              <span class="country-title">Country/region</span>
+              <span class="country-name">Singapore</span>
+            </div>
+            <img src="../assets/icons/arrow_right.svg" alt="" />
+          </div>
+          <div class="shipping-country-wrapper">
+            <div class="shipping-country-title-box">
+              <span class="shipping-country-subtitle">Full Name</span>
+              <span class="shipping-country-name country-name-red">{{ userId }}</span>
+            </div>
+            <button class="copy" @touchstart="copyBtnClicked(userId ?? '')">Copy</button>
+          </div>
+          <div class="shipping-country-wrapper">
+            <div class="shipping-country-title-box">
+              <span class="shipping-country-subtitle">Street 1</span>
+              <span class="shipping-country-name">{{ address.streetOne }}</span>
+            </div>
+            <button class="copy" @touchstart="copyBtnClicked(address.streetOne)">Copy</button>
+          </div>
+          <div class="shipping-country-wrapper">
+            <div class="shipping-country-title-box">
+              <span class="shipping-country-subtitle">Street 2 (optional)</span>
+              <span class="shipping-country-name">{{ address.streetTwo }}</span>
+            </div>
+            <button class="copy" @touchstart="copyBtnClicked(address.streetTwo)">Copy</button>
+          </div>
+          <div class="shipping-country-wrapper shipping-state-wrapper">
+            State/Province/Region (optional)
+          </div>
+          <div class="shipping-country-wrapper">
+            <div class="shipping-country-title-box">
+              <span class="shipping-country-subtitle">Postal Code</span>
+              <span class="shipping-country-name">{{ address.postalCode }}</span>
+            </div>
+            <button class="copy" @touchstart="copyBtnClicked(address.postalCode)">Copy</button>
+          </div>
+          <div class="shipping-country-wrapper">
+            <div class="shipping-country-title-box">
+              <span class="shipping-country-subtitle">Phone</span>
+              <span class="shipping-country-name">{{ address.number }}</span>
+            </div>
+            <button class="copy" @touchstart="copyBtnClicked(address.number)">Copy</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div v-else class="web-detial-wrapper">
+      <h3 class="web-detial-step">{{ $t('Frogooo.StartOverseasShopping') }}</h3>
+      <section class="detail-content">
+        <section class="detail-content-step">
+          <div class="step-left-content">
+            <div class="step-button">
+              {{ $t('Frogooo.Step', { number: 1 }) }}
+            </div>
+            <span class="step-content">
+              {{
+                $t('Frogooo.SelectCountry', { brand: 'Ebay', app: isMobile ? 'App' : 'website' })
+              }}
+            </span>
+            <span class="step-detail">
+              {{ $t('Frogooo.UniqueIdentificationCode') }}
+            </span>
+          </div>
+          <div class="step-right-content">
+            <a
+              class="step-web step-web-background"
+              href="https://www.ebay.com.sg"
+              target="_blank"
+              rel="noopener"
+              >https://www.ebay.com.sg</a
+            >
+          </div>
+        </section>
+        <section class="detail-content-step-two">
+          <div class="step-button">
+            {{ $t('Frogooo.Step', { number: 2 }) }}
+          </div>
+          <h2 class="step-title">
+            {{
+              $t('Frogooo.followingInformation', {
+                brand: 'Ebay',
+                app: isMobile ? 'App' : 'website'
+              })
+            }}
+          </h2>
+          <div class="step-warning-wrapper">
+            <img
+              src="../assets/icons/warning_light.svg"
+              alt=""
+              class="step-warning-wrapper-image"
+            />
+            <p class="step-warning-wrapper-detail">{{ $t('Frogooo.Recipient', { id: userId }) }}</p>
+          </div>
+          <div class="step-warning-wrapper">
+            <img
+              src="../assets/icons/warning_light.svg"
+              alt=""
+              class="step-warning-wrapper-image"
+            />
+            <p class="step-warning-wrapper-detail">{{ $t('Frogooo.ShippingAddress') }}</p>
+          </div>
+        </section>
+        <div class="step-input-shadow">
+          <div class="step-input">
+            <img class="step-input-wrapper-image" src="../assets/icons/ebay_4.png" alt="" />
+          </div>
+          <div class="step-input step-input-margin">
+            <h3 class="step-input-title">Full Name</h3>
+            <div class="step-input-wrapper">
+              <span class="step-input-wrapper-name">{{ userId }}</span>
+              <button class="copy" @click="copyBtnClicked(userId ?? '')">Copy</button>
+            </div>
+          </div>
+          <div class="step-input step-input-margin">
+            <div class="step-input-flex-row">
+              <div class="step-input-image-container">
+                <img
+                  class="step-input-wrapper-image"
+                  src="../assets/icons/ebay_5.png"
+                  alt=""
+                  @click="copyBtnClicked('3 Lorong Bakar Batu')"
+                />
+                <img
+                  class="step-input-wrapper-image step-input-wrapper-image-margin"
+                  src="../assets/icons/ebay_3.png"
+                  alt=""
+                  @click="copyBtnClicked('348741')"
+                />
+                <img
+                  class="step-input-wrapper-high-image step-input-wrapper-image-margin"
+                  src="../assets/icons/ebay_1.png"
+                  alt=""
+                  @click="copyBtnClicked('+65 8385 0022')"
+                />
+              </div>
+              <img
+                class="step-input-wrapper-image"
+                src="../assets/icons/ebay_2.png"
+                alt=""
+                @click="copyBtnClicked('Brightway building #02-04B')"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <FooterComponent backgroundColor="white" v-if="!isMobile" />
+  </div>
+</template>
+
+<style lang="stylus" scoped>
+@media (max-width: 750px)
+  .ebay-detial-view
+    width: 100%
+    background: #F2F4F8
+    padding-bottom: .84rem
+    .select-country
+      font-size: .16rem
+      line-height: .2rem
+      color: #0A1B39
+      margin: 0 .2rem 0
+      display: flex
+      justify-content: space-between
+      align-items: center
+    .step-container
+      position: relative
+      margin: .2rem .2rem 0
+      display: flex
+      flex-direction: column
+      color: #000
+      border-radius: .24rem
+      padding: .24rem .2rem
+      background: #fff
+      .step
+          position: absolute
+          top: 2px
+          left: 2px
+          background-color: #E6E9F1
+          padding: .04rem .24rem
+          font-weight: 500
+          font-size: .14rem
+          line-height: .2rem
+          color: rgba(10, 27, 57, 0.6)
+          border-bottom-right-radius: .24rem
+          border-top-left-radius: .24rem
+      .select-address-container
+        margin-top: .25rem
+        .select-address
+          font-size: .2rem
+          line-height: .26rem
+          font-weight: 700
+      .first-use
+          margin-top: .3rem
+          .first-use-image
+              margin-top: .1rem
+              img
+                  width: 100%
+                  height: 100%
+      .second-use
+        margin-top: .2rem
+    .shipping-container
+      position: relative
+      margin: .2rem .2rem 0
+      display: flex
+      flex-direction: column
+      color: #000
+      border-radius: .24rem
+      padding: .24rem .2rem
+      background: #fff
+      .step
+          position: absolute
+          top: 2px
+          left: 2px
+          background-color: #E6E9F1
+          padding: .04rem .24rem
+          font-weight: 500
+          font-size: .14rem
+          line-height: .2rem
+          color: rgba(10, 27, 57, 0.6)
+          border-bottom-right-radius: .24rem
+          border-top-left-radius: .24rem
+      .country-region
+        display: flex
+        justify-content: space-between
+        align-items: center
+        padding: .08rem
+        .country-reion-detail
+          display: flex
+          flex-direction: column
+          .country-title
+            font-size: .1rem
+            line-height: .14rem
+            font-weight: 500
+            color: #0A1B39
+          .country-name
+              font-size: .12rem
+              line-height: .16rem
+              font-weight: 500
+              color: #0A1B39
+      .shipping-information
+          display: flex
+          flex-direction: column
+          margin-top: .2rem
+          .shipping-title
+              font-size: .2rem
+              line-height: .26rem
+              font-weight: 600
+              color: #0A1B39
+          .shipping-detail
+              display: flex
+              align-items: start
+              margin-top: .2rem
+              .tips
+                  width: .16rem
+                  height: .16rem
+                  margin-right: .05rem
+              .shipping-description
+                  font-size: .14rem
+                  line-height: .18rem
+                  color: rgba(10, 27, 57, 0.6)
+      .shipping-country
+          padding: .08rem
+          margin-top: .3rem
+          box-shadow: 0 .02rem .2rem 0 #eee
+          .shipping-country-wrapper
+            display: flex
+            align-items: flex-end
+            justify-content: space-between
+            padding: .08rem
+            border: 1px solid #8F8F8F
+            border-radius: .08rem
+            margin-top: .2rem
+            background: #F7F7F7
+            .shipping-country-title-box
+              display: flex
+              flex-direction: column
+              .shipping-country-subtitle
+                font-size: .1rem
+                line-height: .16rem
+                font-weight: 500
+                color: rgba(10, 27, 57, 0.6)
+              .shipping-country-name
+                font-size: .12rem
+                line-height: .22rem
+                font-weight: 500
+              .country-name-red
+                color: #D2202F
+            .copy
+              border-radius: .23rem
+              background: #05FE9F
+              padding: 0 .1rem
+              font-size: .12rem
+              line-height: .22rem
+              font-weight: 500
+              color: #0A1B39
+              text-decoration: underline
+            .copy:active
+              background: #e9ecef
+          .shipping-state-wrapper
+            padding: .20rem .08rem
+            font-size: .1rem
+            line-height: .16rem
+            font-weight: 500
+            color: rgba(10, 27, 57, 0.6)
+          .shipping-country-tips
+            display: flex
+            flex-direction: column
+            .tips
+              font-size: .1rem
+              line-height: .22rem
+              color: #0A1B39
+              margin: .1rem 0
+            .button
+              border: 1px solid #D5D7D6
+              box-shadow: 0 2px 6px 0 rgba(10, 27, 57, 0.2)
+              width: 100%
+              padding: .08rem
+              border-radius: .08rem
+              text-align: center
+              font-size: .13rem
+              line-height: .22rem
+              font-weight: 500
+@media (min-width: 1024px)
+  .ebay-detial-view
+      width: 100%
+      background: #F2F4F8
+      height: 100%
+      overflow-y: auto
+    .web-detial-wrapper
+      width: 800px
+      margin: 10px auto
+      .web-detial-step
+        font-size: 16px
+        line-height: 20px
+        color: #0A1B39
+        margin-left: 24px
+      .detail-content
+        border-radius: 24px
+        padding: 24px
+        background: #fff
+        margin-top: 10px
+        .detail-content-step
+          display: flex
+          align-items: center
+          .step-button
+            border-radius: 22px
+            padding: 2px 15px
+            font-size: 12px
+            line-height: 20px
+            font-weight: 500
+            color: rgba(10, 27, 57, 0.6)
+            background: #E6E9F1
+            width: fit-content
+          .step-left-content
+            display: flex
+            flex-direction: column
+            width: 377px
+            margin-right: 48px
+            .step-content
+              font-size: 20px
+              line-height: 22px
+              color: #0A1B39
+              font-weight: 500
+              margin-top: 12px
+            .step-detail
+              margin-top: 12px
+              font-size: 14px
+              line-height: 20px
+              color: rgba(10, 27, 57, 0.6)
+          .step-right-content
+            display: flex
+            flex-direction: column
+            .step-web
+              margin-top: 10px
+              font-size: 12px
+              line-height: 18px
+              color: #0A1B39
+            .step-web-background
+              padding: 12px 0
+              background: #0A1B39
+              border-radius: 8px
+              font-size: 16px
+              line-height: 18px
+              color: #FFFFFF
+              text-align: center
+              width: 300px
+              text-decoration: underline
+        .detail-content-step-two
+          display: flex
+          flex-direction: column
+          margin-top: 18px
+          .step-button
+            border-radius: 22px
+            padding: 2px 15px
+            font-size: 12px
+            line-height: 20px
+            font-weight: 500
+            color: rgba(10, 27, 57, 0.6)
+            background: #E6E9F1
+            width: fit-content
+          .step-title
+            font-size: 20px
+            line-height: 22px
+            font-weight: 500
+            color: #0A1B39
+            margin: 16px 0
+          .step-warning-wrapper
+            display: flex
+            align-items: start
+            .step-warning-wrapper-image
+              margin-right: 2px
+            .step-warning-wrapper-detail
+              font-size: 14px
+              line-height: 18px
+              color: rgba(10, 27, 57, 0.6)
+        .step-input-shadow
+          box-shadow: 0 2px 20px 0 #eee
+          border-radius: 16px
+          padding: 24px 16px
+          margin-top: 16px
+          .step-input-margin
+            margin-top: 24px
+          .step-input
+            display: flex
+            flex-direction: column
+            .step-input-wrapper-image
+              width: 344px
+              height: 50px
+            .step-input-title
+              font-size: 12px
+              line-height: 22px
+              font-weight: 700
+              color: #000
+            .step-input-flex-row
+              display: flex
+              justify-content: space-between
+              .step-input-wrapper-image
+                width: 344px
+                height: 50px
+              .step-input-image-container
+                display: flex
+                flex-direction: column
+                .step-input-wrapper-high-image
+                  width: 344px
+                  height: 67px
+                .step-input-wrapper-image-margin
+                  margin-top: 24px
+            .step-input-wrapper
+              display: flex
+              justify-content: space-between
+              align-items: center
+              border-bottom: 1px solid #8f8f8f
+              padding: 8px
+              width: 530px
+              .copy
+                border-radius: 23px
+                background: #05FE9F
+                padding: 0 10px
+                font-size: 12px
+                line-height: 22px
+                font-weight: 500
+                color: #0A1B39
+                text-decoration: underline
+              .step-input-wrapper-name
+                font-size: 14px
+                line-height: 20px
+                color: #C2121F
+</style>

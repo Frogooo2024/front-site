@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="E-express make overseas shopping easier">
+    <meta property="og:description" content="From Singapore to Indonesia">
+    <meta property="og:image" content="https://frogooo.com/f.png">
+    <meta property="og:url" content="https://frogooo.com">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="/f.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Frogooo</title>
+    <script>
+      (function () {
+        function setRemUnit() {
+          const html = document.documentElement;
+          const clientWidth = html.clientWidth;
+          if (clientWidth <= 750) {
+            html.style.fontSize = clientWidth / 3.75 + 'px';
+          } 
+        }
+  
+        setRemUnit();
+        window.addEventListener('resize', setRemUnit);
+      })();
+    </script>
+    <style>
+      body {
+        background-color: #030014;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
