@@ -3,3 +3,4 @@ node_modules
 *-lock.json
 *.development
 .DS_Store
+dist
