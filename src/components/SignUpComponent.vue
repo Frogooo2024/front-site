@@ -215,7 +215,7 @@ onUnmounted(() => {
       <span class="resend" @click="resendClicked">{{ $t('Frogooo.Resend') }}</span>
     </section>
     <section class="sign-up">
-      <button class="sign-up-button" @touchstart="continueClicked">
+      <button class="sign-up-button" @touchend="continueClicked">
         {{ $t('Frogooo.Continue') }}
       </button>
     </section>

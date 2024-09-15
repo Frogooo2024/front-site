@@ -273,8 +273,11 @@ const addPackageClicked = () => {
       color: #fff
       background: #0A1B39
       width: fit-content
+      cursor: pointer
     .button:nth-of-type(1)
       margin-right: 50px
+    .button:hover
+      text-decoration: underline
   .receiving-packages-title
     margin-top: 30px
     .title
@@ -340,6 +343,7 @@ const addPackageClicked = () => {
         position: absolute
         top: 20px
         right: 24px
+        display: flex
         img
           width: 18px
           height: 18px

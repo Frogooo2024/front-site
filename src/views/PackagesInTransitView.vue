@@ -40,12 +40,10 @@ const whatsAppClicked = () => {
   window.open('https://wa.me/message/UGN2RVXLNV4LH1', '_blank')
 }
 const packageListItemClicked = (order: any, item: any) => {
-  setTimeout(() => {
-    router.push({
-      name: 'orderDetail',
-      params: { orderNumber: order.orderNumber, transportNumber: item.transportNumber }
-    })
-  }, 80)
+  router.push({
+    name: 'orderDetail',
+    params: { orderNumber: order.orderNumber, transportNumber: item.transportNumber }
+  })
 }
 const viewPageClicked = () => {
   if (showMorePage.value) {
@@ -67,7 +65,7 @@ const viewPageClicked = () => {
         </div>
       </section>
       <section class="package-list-item-container" v-for="(order, index) in orderList" :key="index">
-        <div
+        <a
           class="package-list-item"
           v-for="(item, index) in order.packageList"
           :key="index"
@@ -83,7 +81,7 @@ const viewPageClicked = () => {
           <div class="list-item-arrow">
             <img src="../assets/icons/arrow_right.svg" alt="" />
           </div>
-        </div>
+        </a>
       </section>
     </div>
     <section class="no-packages" v-if="showNoData" @click="viewPageClicked">
@@ -125,6 +123,8 @@ const viewPageClicked = () => {
         justify-content: space-between
         margin-top: .14rem
         align-items: center
+        -webkit-tap-highlight-color: #ccc
+        touch-action: manipulation
         .list-item
           display: flex
           align-items: center
@@ -138,8 +138,6 @@ const viewPageClicked = () => {
               font-weight: 500
           .list-item-image
             margin-right: .1rem
-    .package-list-item:active
-      background: #ccc
   .no-packages
     display: flex
     flex-direction: column

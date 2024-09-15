@@ -28,10 +28,10 @@ const listItems = ref([
     title: 'Frogooo.Home',
     flag: 'home'
   },
-  {
-    title: 'Frogooo.ShippingFeeCalculation',
-    flag: 'shippingFeeCalculation'
-  },
+  // {
+  //   title: 'Frogooo.ShippingFeeCalculation',
+  //   flag: 'shippingFeeCalculation'
+  // },
   {
     title: 'Frogooo.ContactUs',
     flag: 'contactUs'
@@ -95,33 +95,31 @@ watch(selectedItem, (newVal) => {
 })
 
 const onListItemClicked = (item: any) => {
-  setTimeout(() => {
-    if (item.flag == 'home') {
-      closeButtonClicked()
+  if (item.flag == 'home') {
+    closeButtonClicked()
+    router.push({ path: '/' })
+  } else if (item.flag == 'contactUs') {
+    closeButtonClicked()
+    router.push({ path: '/contact' })
+  } else if (item.flag == 'language') {
+    pickerItems = languageArr
+    showTray.value = true
+  } else if (item.flag == 'shippingFeeCalculation') {
+    closeButtonClicked()
+    router.push({ path: '/freight' })
+  } else if (item.flag == 'LogOut') {
+    localStorage.removeItem('frogoooToken')
+    window.localStorage.setItem('frogoooIsLogin', 'false')
+    closeButtonClicked()
+    if (route.path == '/') {
+      window.location.reload()
+    } else {
       router.push({ path: '/' })
-    } else if (item.flag == 'contactUs') {
-      closeButtonClicked()
-      router.push({ path: '/contact' })
-    } else if (item.flag == 'language') {
-      pickerItems = languageArr
-      showTray.value = true
-    } else if (item.flag == 'shippingFeeCalculation') {
-      closeButtonClicked()
-      router.push({ path: '/freight' })
-    } else if (item.flag == 'LogOut') {
-      localStorage.removeItem('frogoooToken')
-      window.localStorage.setItem('frogoooIsLogin', 'false')
-      closeButtonClicked()
-      if (route.path == '/') {
-        window.location.reload()
-      } else {
-        router.push({ path: '/' })
-      }
-    } else if (item.flag == 'converter') {
-      closeButtonClicked()
-      router.push({ path: '/converter' })
     }
-  }, 60)
+  } else if (item.flag == 'converter') {
+    closeButtonClicked()
+    router.push({ path: '/converter' })
+  }
 }
 </script>
 <template>
@@ -141,7 +139,7 @@ const onListItemClicked = (item: any) => {
       >
     </section>
     <section class="more-content">
-      <div
+      <a
         class="content-list-item"
         v-for="(item, index) in listItems"
         :key="item.title"
@@ -150,14 +148,14 @@ const onListItemClicked = (item: any) => {
         <span class="list-item" :class="{ 'list-item-white-color': colorFlag == 'black' }">{{
           $t(item.title)
         }}</span>
-        <div v-if="index != 3">
+        <div v-if="index != 2">
           <img src="../assets/icons/arrow_right.svg" v-if="colorFlag == 'white'" alt="" />
           <img src="../assets/icons/arrow_white.png" v-else alt="" />
         </div>
         <div v-else>
           <img :src="currentLanguageIcon" alt="" />
         </div>
-      </div>
+      </a>
     </section>
     <TrayPicker
       v-model:selectedItem="selectedItem"
@@ -185,6 +183,7 @@ const onListItemClicked = (item: any) => {
     border-left: .01rem solid rgba(255, 255, 255, 0.2)
     border-top-left-radius: .24rem
     border-bottom-left-radius: .24rem
+    width: 60%
     .more-header
         display: flex
         padding: .2rem
@@ -208,6 +207,8 @@ const onListItemClicked = (item: any) => {
             justify-content: space-between
             padding: .14rem .2rem
             align-items: center
+            -webkit-tap-highlight-color: #ccc
+            touch-action: manipulation
             .list-item
                 font-size: .16rem
                 line-height: .24rem
@@ -219,6 +220,4 @@ const onListItemClicked = (item: any) => {
             img
               width: .16rem
               height: .16rem
-        .content-list-item:active
-          background-color: #ccc
 </style>

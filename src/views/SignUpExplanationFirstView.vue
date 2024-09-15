@@ -11,6 +11,7 @@ const router = useRouter()
 const isMobile = useIsMobile()
 const showMorePage = ref(false)
 const { userId } = useUserIdStore()
+const eventName = isMobile ? ref('touchend') : ref('click')
 
 const onMoreButtonClicked = () => {
   showMorePage.value = true
@@ -22,9 +23,7 @@ const whatsAppClicked = () => {
   window.open('https://wa.me/message/UGN2RVXLNV4LH1', '_blank')
 }
 const skipClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/signUpExplanationSecond' })
-  }, 50)
+  router.push({ path: '/signUpExplanationSecond' })
 }
 </script>
 
@@ -44,7 +43,7 @@ const skipClicked = () => {
       <section class="explanation-detail">
         <p>{{ $t('Frogooo.UniqueIdentificationCode') }}</p>
       </section>
-      <div class="skip" @click="skipClicked">{{ $t('Frogooo.Skip') }}</div>
+      <div class="skip" v-on:[eventName]="skipClicked">{{ $t('Frogooo.Skip') }}</div>
       <div class="signup-image">
         <img src="../assets/icons/signup_inset.png" alt="" v-if="isMobile" />
         <img src="../assets/icons/2.0x/signup_inset.png" alt="" v-else />

@@ -26,6 +26,7 @@ const isMobile = useIsMobile()
 const showDetailDialog = ref(false)
 const detailDialogItem = ref<any>()
 const stepsDetial = ref<any>()
+const eventName = isMobile ? ref('touchend') : ref('click')
 
 onMounted(async () => {
   window.scrollTo({ left: 0, top: 0, behavior: 'smooth' })
@@ -60,33 +61,23 @@ const whatsAppClicked = () => {
 }
 
 const inWarehouseClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/packagesInWarehouse' })
-  }, 60);
+  router.push({ path: '/packagesInWarehouse' })
 }
 
 const inTransitClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/packagesInTransit' })
-  }, 60);
+  router.push({ path: '/packagesInTransit' })
 }
 
 const historyListClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/packageHistory' })
-  }, 60);
+  router.push({ path: '/packageHistory' })
 }
 
 const singaporeConsigneeClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/singaporeAddress' })
-  }, 60);
+  router.push({ path: '/singaporeAddress' })
 }
 
 const receivingAddressClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/addressList' })
-  }, 60);
+  router.push({ path: '/addressList' })
 }
 
 const showMorePackagesArrowClicked = () => {
@@ -101,9 +92,7 @@ const showDeleteClicked = (item: any) => {
 }
 
 const addPackageClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/addPackage' })
-  }, 60);
+  router.push({ path: '/addPackage' })
 }
 
 const deletePackgeClicked = async (item: any) => {
@@ -163,10 +152,10 @@ const closeDetailDialog = () => {
         </div>
       </section>
       <section class="button-wrapper">
-        <div class="button" @click="singaporeConsigneeClicked">
+        <div class="button" v-on:[eventName]="singaporeConsigneeClicked">
           {{ $t('Frogooo.SingaporeConsignee') }}
         </div>
-        <div class="button" @click="receivingAddressClicked">
+        <div class="button" v-on:[eventName]="receivingAddressClicked">
           {{ $t('Frogooo.ReceivingAddress') }}
         </div>
       </section>
@@ -174,10 +163,10 @@ const closeDetailDialog = () => {
         <h1 class="title">{{ $t('Frogooo.ReceivingPackages') }}</h1>
       </section>
       <section class="receiving-packages-wrapper">
-        <section class="list-item-container" @click="addPackageClicked">
+        <a class="list-item-container" @click="addPackageClicked">
           <div class="list-item">{{ $t('Frogooo.TrackingNumber') }}</div>
           <img class="arrow-right" src="../assets/icons/arrow_right.svg" alt="" />
-        </section>
+        </a>
         <section class="packages-list-container" v-if="packageList?.rows?.length">
           <div
             class="packages-list-item"
@@ -206,18 +195,18 @@ const closeDetailDialog = () => {
             <img :src="arrowImageUrl" alt="" />
           </div>
         </section>
-        <section class="list-item-container" @click="inWarehouseClicked">
+        <a class="list-item-container" @click="inWarehouseClicked">
           <div class="list-item">{{ $t('Frogooo.ArrivedAt') }}</div>
           <img class="arrow-right" src="../assets/icons/arrow_right.svg" alt="" />
-        </section>
-        <section class="list-item-container" @click="inTransitClicked">
+        </a>
+        <a class="list-item-container" @click="inTransitClicked">
           <div class="list-item">{{ $t('Frogooo.InTransit') }}</div>
           <img class="arrow-right" src="../assets/icons/arrow_right.svg" alt="" />
-        </section>
-        <section class="list-item-container" @click="historyListClicked">
+        </a>
+        <a class="list-item-container" @click="historyListClicked">
           <div class="list-item">{{ $t('Frogooo.YourPackageHistory') }}</div>
           <img class="arrow-right" src="../assets/icons/arrow_right.svg" alt="" />
-        </section>
+        </a>
       </section>
     </div>
     <UserCenterComponent v-else @order-list-item-clicked="onOrderListItemClicked" />
@@ -345,12 +334,12 @@ const closeDetailDialog = () => {
           display: flex
           justify-content: space-between
           align-items: center
+          -webkit-tap-highlight-color: #ccc
+          touch-action: manipulation
           .list-item
             font-size: .18rem
             line-height: .23rem
             color: #0A1B39
-        .list-item-container:active
-          background: #ccc
         .packages-list-container
           position: relative
           margin-top: .2rem

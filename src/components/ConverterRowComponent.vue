@@ -63,7 +63,7 @@ const convertedAmount = computed(() => {
           ></div>
           <span class="country-code">{{ selectedOption.code }}</span>
           <img class="select-arrow" src="../assets/icons/down-arrow.png" alt="" />
-          <span class="decollator">|</span>
+          <span class="decollator"></span>
         </section>
         <input type="number" class="currency-input" v-model="amount" />
       </div>
@@ -88,7 +88,7 @@ const convertedAmount = computed(() => {
       <section class="currency-wrapper">
         <div class="country-image"></div>
         <span class="country-code">IDR</span>
-        <span class="decollator">|</span>
+        <span class="decollator"></span>
       </section>
       <div class="result">{{ convertedAmount }}</div>
     </div>
@@ -149,8 +149,9 @@ const convertedAmount = computed(() => {
                     width: 12px
                     height: 12px
                 .decollator
-                    color: rgba(10, 27, 57, 0.08)
-                    margin-right: 10px
+                    height: 24px
+                    border-left: 1px solid rgba(10, 27, 57, 0.08)
+                    margin: 0 10px
             .currency-input
                 background: transparent
                 outline: none
@@ -213,8 +214,9 @@ const convertedAmount = computed(() => {
                 color: #0A1B39
                 margin-right: 38px
             .decollator
-                color: rgba(10, 27, 57, 0.08)
-                margin-right: 10px
+              height: 24px
+              border-left: 1px solid rgba(10, 27, 57, 0.08)
+              margin: 0 10px
         .result
             font-size: 24px
             line-height: 24px

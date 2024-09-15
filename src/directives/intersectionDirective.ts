@@ -21,15 +21,6 @@ export default {
         if (entry.isIntersecting) {
           if (binding.value == 'advanceIntersection') {
             el.classList.add('animate__animated', 'animate__lightSpeedInRight')
-            // el.querySelector('.most-advance-border').classList.add(
-            //   'animate__animated',
-            //   'animate__fadeIn'
-            // )
-            // el.querySelector('.most-advance-border').style.animationDuration = '2s'
-            // el.querySelector('.most-advance-description').classList.add(
-            //   'animate__animated',
-            //   'animate__lightSpeedInRight'
-            // )
             observer.unobserve(entry.target)
           } else if (binding.value == 'advantage_title_0') {
             el.classList.add('animate__animated', 'animate__fadeInLeft')

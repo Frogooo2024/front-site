@@ -33,8 +33,8 @@ onMounted(async () => {
     if (selectedData.cityCode.length) {
       Promise.all([
         api.getCity({ code: 'ID' }),
-        api.getCity({ code: selectedData.provinceSelected, key: selectedData.provinceSelected }),
-        api.getCity({ code: selectedData.citySelected, key: selectedData.citySelected })
+        api.getCity({ code: selectedData.provinceCode, key: 'code' }),
+        api.getCity({ code: selectedData.cityCode, key: 'code' })
       ]).then(
         (res: any) => {
           if (res[0].status && res[1].status && res[2].status) {
@@ -119,7 +119,7 @@ watch(selectedItem, async (newVal) => {
       showResult.value = false
       selectedData.provinceSelected = newVal.title
       selectedData.provinceCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       cityData.value = response?.data
     }
   } else if (newVal.id == 'city') {
@@ -131,7 +131,7 @@ watch(selectedItem, async (newVal) => {
       areaPickerItems.value = []
       selectedData.citySelected = newVal.title
       selectedData.cityCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       areaData.value = response?.data
     }
   } else if (newVal.id == 'area') {
@@ -318,6 +318,8 @@ const probitionListItemsClicked = () => {
       justify-content: space-between
       margin-top: 16px
       .item-row-container
+        display: flex
+        flex-direction: column
         flex: 1
         .item-row-title
           font-size: 16px
@@ -337,6 +339,9 @@ const probitionListItemsClicked = () => {
           padding: 15px 16px
           width: 100%
           color: #0a1b39
+          font-size: 16px
+          line-height: 16px
+          height: 46px
         .input-warn-detail
           color: red
           margin-top: 5px
@@ -358,8 +363,11 @@ const probitionListItemsClicked = () => {
           color: #0A1B39
           span
             margin: 0 5px
+            width: 6px
+            height: 16px
+            font-size: 16px
           .item-unit
-            width: 33%
+            flex: 1
             padding: 15px 16px
             border-radius: 8px
             outline: none
@@ -367,6 +375,7 @@ const probitionListItemsClicked = () => {
             line-height: 16px
             color: #0A1B39
             border: 1px solid rgba(10, 27, 57, 0.1)
+            height: 46px
         .input-warn-detail
           color: red
           margin-top: 5px

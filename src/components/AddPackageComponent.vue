@@ -105,12 +105,12 @@ const submit = () => {
 
 <style lang="stylus" scoped>
 .add-package-container
-        margin: 20px auto
+        margin: 20px auto 120px
         display: flex
         flex-direction: column
         color: #fff
         border-radius: 24px
-        padding: 16px 32px
+        padding: 32px 32px 16px
         background: #fff
         width: 800px
         .select-address-container
@@ -131,6 +131,8 @@ const submit = () => {
             .item-wrapper
                 margin-top: 20px
                 width: 356px
+                display: flex
+                flex-direction: column
                 .item-title
                     font-size: 16px
                     line-height: 16px
@@ -144,6 +146,7 @@ const submit = () => {
                   line-height: 16px
                   color: #0A1B39
                   width: 100%
+                  height: 48px
           .item-price-title
             font-size: 16px
             line-height: 16px
@@ -231,6 +234,7 @@ const submit = () => {
               margin-left: 10px
         .item-submit
             margin: 12px auto 20px
+            display: flex
             .item-submit-button
                 border-radius: 16px
                 text-align: center

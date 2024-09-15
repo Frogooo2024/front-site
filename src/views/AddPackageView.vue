@@ -237,17 +237,17 @@ const viewPageClicked = () => {
       </section>
       <div class="item-help-container">
         <h2 class="item-help-title">{{ $t('Frogooo.NeedHelp') }}</h2>
-        <div class="item-help-detail" @click="helpClicked">
+        <a class="item-help-detail" @click="helpClicked">
           <p class="item-help-question">{{ $t('Frogooo.FindTheTrackingNumber') }}</p>
           <img src="../assets/icons/arrow_right.svg" alt="" />
-        </div>
+        </a>
       </div>
       <section class="item-submit">
         <div class="item-submit-warning">
           <img src="../assets/icons/warning_light.svg" alt="" />
           <p class="item-submit-warning-text">{{ $t('Frogooo.AddPackageWarning') }}</p>
         </div>
-        <button class="item-submit-button" @touchstart="submit">
+        <button class="item-submit-button" @touchend="submit">
           {{ $t('Frogooo.ConfirmAndSubmit') }}
         </button>
       </section>
@@ -388,6 +388,8 @@ const viewPageClicked = () => {
                 justify-content: space-between
                 align-items: center
                 margin-top: .24rem
+                -webkit-tap-highlight-color: #ccc
+                touch-action: manipulation
                 .item-help-question
                     font-size: .14rem
                     line-height: .14rem

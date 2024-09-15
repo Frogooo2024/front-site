@@ -65,11 +65,11 @@ const onShoppingTripClicked = () => router.push({ path: '/userCenter' })
           }}</span>
           <span>{{ $t('Frogooo.TrustworthyAndReliableDescriptionOther') }}</span>
         </div>
-        <div class="shopping-trip-container">
+        <!-- <div class="shopping-trip-container">
           <button class="shopping-trip-button" @click="onShoppingTripClicked">
             {{ $t('Frogooo.ShoppingTrip') }}
           </button>
-        </div>
+        </div> -->
       </section>
     </section>
   </div>

@@ -37,25 +37,49 @@ const whatsAppClicked = () => {
 
 const address = reactive({
   userId: userId,
-  streetOne: '12 TANNERY ROAD',
-  streetTwo: '#02-04B',
-  postalCode: '348741',
+  streetOne: 'PERFORMANCE BUILDING, 158 KALLANG WAY',
+  streetTwo: '#06-10A',
+  postalCode: '349245',
   numberCode: '8385',
   number: '0022'
 })
-
 const copyBtnClicked = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text)
-    showToast({
-      message: t('Frogooo.SuccessfulCopy'),
-      position: 'bottom'
-    })
-  } catch (err) {
-    showToast({
-      message: t('Frogooo.CopyFailure'),
-      position: 'bottom'
-    })
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text)
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+  } else {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      document.execCommand('copy')
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+
+    document.body.removeChild(textArea)
   }
 }
 
@@ -141,16 +165,16 @@ const viewPageClicked = () => {
           <div class="shipping-country-wrapper">
             <div class="shipping-country-title-box">
               <img src="../assets/icons/search.svg" alt="" />
-              <span class="shipping-country-subtitle">348741</span>
+              <span class="shipping-country-subtitle">{{ address.postalCode }}</span>
             </div>
             <img class="shipping-country-subtitle-image" src="../assets/icons/close.svg" alt="" />
           </div>
           <div class="shipping-country-wrapper shipping-country-wrapper-text">
-            3 lorong bakar batu. brightway building.
+            {{ address.streetOne }}
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.streetTwo }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.streetTwo)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.streetTwo)">Copy</button>
           </div>
           <div class="shipping-country-wrapper-tips">
             <img src="../assets/icons/right.svg" alt="" />
@@ -159,7 +183,7 @@ const viewPageClicked = () => {
           <h3 class="shipping-country-title">Name of Recipient</h3>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name country-name-red">{{ userId }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(userId ?? '')">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(userId ?? '')">Copy</button>
           </div>
           <div class="shipping-country-wrapper-tips">
             <img src="../assets/icons/right.svg" alt="" />
@@ -173,12 +197,12 @@ const viewPageClicked = () => {
           <div class="shipping-country-number-container">
             <div class="shipping-country-number-wrapper">
               <span class="shipping-country-number-code">{{ address.numberCode }}</span>
-              <button class="copy" @touchstart="copyBtnClicked(address.numberCode)">Copy</button>
+              <button class="copy" @touchend="copyBtnClicked(address.numberCode)">Copy</button>
             </div>
             <span class="link">-</span>
             <div class="shipping-country-number-wrapper">
               <span class="shipping-country-number-code">{{ address.number }}</span>
-              <button class="copy" @touchstart="copyBtnClicked(address.number)">Copy</button>
+              <button class="copy" @touchend="copyBtnClicked(address.number)">Copy</button>
             </div>
           </div>
           <h3 class="shipping-country-title">Email( For Order / Shipping Info. )</h3>
@@ -251,33 +275,73 @@ const viewPageClicked = () => {
           <div class="step-input step-input-margin-left">
             <h3 class="step-input-title">Name of Recipient</h3>
             <div class="step-input-wrapper">
-              <span class="step-input-wrapper-name">{{ userId }}</span>
+              <span class="step-input-wrapper-name step-input-wrapper-name-red">{{ userId }}</span>
               <button class="copy" @click="copyBtnClicked(userId ?? '')">Copy</button>
             </div>
             <p class="step-input-warning">Please insert the name of recipient in local language.</p>
-          </div>
-          <div class="step-input step-input-margin">
             <div class="step-input-flex-row">
-              <img
-                class="step-input-wrapper-image"
-                src="../assets/icons/qoo10_3.png"
-                alt=""
-                @click="copyBtnClicked('8385')"
-              />
-              <img
-                class="step-input-wrapper-image"
-                src="../assets/icons/qoo10_4.png"
-                alt=""
-                @click="copyBtnClicked('0022')"
-              />
+              <img class="qoo10-image" src="../assets/icons/qoo10_phone.svg" alt="" />
+              <div class="step-input-wrapper step-input-wrapper-margin-right">
+                <span class="step-input-wrapper-name">Singapore (+65)</span>
+                <img src="../assets/icons/arrow_down.svg" alt="" />
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.numberCode }}</span>
+                <button class="copy" @click="copyBtnClicked(address.numberCode)">Copy</button>
+              </div>
+              <div class="link-character"></div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.number }}</span>
+                <button class="copy" @click="copyBtnClicked(address.number)">Copy</button>
+              </div>
             </div>
-            <img class="step-input-wrapper-high-image" src="../assets/icons/qoo10_1.png" alt="" />
-            <img
-              class="step-input-wrapper-high-image step-input-wrapper-image-margin"
-              src="../assets/icons/qoo10_2.png"
-              alt=""
-              @click="copyBtnClicked('#02-04B')"
-            />
+            <div class="step-input-flex-row">
+              <img class="qoo10-image" src="../assets/icons/qoo10_email.svg" alt="" />
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">Your email</span>
+              </div>
+            </div>
+            <p class="step-input-warning step-input-warning-red">
+              Email must be in a valid format.
+            </p>
+            <p class="step-input-warning">
+              You will receive order and shipping information via this email.
+            </p>
+            <div class="step-input-flex-row">
+              <div class="step-input-wrapper step-input-wrapper-width">
+                <div class="step-input-wrapper-left">
+                  <img
+                    class="step-input-wrapper-image"
+                    src="../assets/icons/singapore.png"
+                    alt=""
+                  />
+                  <span class="step-input-wrapper-name">Singapore</span>
+                </div>
+                <img src="../assets/icons/arrow_right.svg" alt="" />
+              </div>
+              <div class="delivery-notice-container">
+                <img src="../assets/icons/warning.svg" alt="" />
+                <span class="delivery-notice">Delivery Notice</span>
+              </div>
+            </div>
+            <div class="search-container">
+              <div class="search-postal-code">{{ address.postalCode }}</div>
+              <div class="search">Search</div>
+              <p class="search-text">(*)For address line 1,please use [search] button.</p>
+            </div>
+            <div class="step-input-wrapper step-input-wrapper-background">
+              <span class="step-input-wrapper-name">{{ address.streetOne }}</span>
+            </div>
+            <div class="step-input-wrapper step-input-wrapper-border">
+              <span class="step-input-wrapper-name">{{ address.streetTwo }}</span>
+              <button class="copy" @click="copyBtnClicked(address.streetTwo)">Copy</button>
+            </div>
+            <p class="step-input-warning step-input-warning-margin">
+              Letters and numbers only; no symbols except / @ # -,.()
+            </p>
+            <p class="step-input-warning">
+              Please enter your address in your local language to prevent delivery delays.
+            </p>
           </div>
         </div>
       </section>
@@ -628,8 +692,6 @@ const viewPageClicked = () => {
           border-radius: 16px
           padding: 16px
           margin-top: 16px
-          .step-input-margin
-            margin-top: 16px
           .step-input-margin-left
             margin-left: 10px
             margin-right: 10px
@@ -644,16 +706,46 @@ const viewPageClicked = () => {
               font-size: 10px
               line-height: 22px
               color: #999
+            .step-input-warning-red
+              color: #EA002A
+              margin-left: 42px
+            .step-input-warning-margin
+              margin-top: 5px
             .step-input-flex-row
               display: flex
               align-items: center
               justify-content: start
-            .step-input-wrapper-image
-              height: 48px
-            .step-input-wrapper-high-image
-              height: 144px
-            .step-input-wrapper-image-margin
               margin-top: 16px
+            .search-container
+              display: flex
+              align-items: center
+              margin-top: 16px
+              .search-postal-code
+                height: 30px
+                width: 79px
+                text-align: center
+                font-size: 13px
+                line-height: 30px
+                border: 0.5px solid #CCCCCC
+                background: #FCFCFC
+                color: #0A1B39
+                border-radius: 4px
+                margin-right: 10px
+              .search
+                height: 30px
+                width: 79px
+                text-align: center
+                font-size: 13px
+                line-height: 30px
+                border: 0.5px solid #CCCCCC
+                background: #2073E5
+                color: #fff
+                border-radius: 4px
+                margin-right: 10px
+              .search-text
+                font-size: 10px
+                line-height: 22px
+                color: #0A1B39
             .step-input-wrapper
               display: flex
               justify-content: space-between
@@ -661,6 +753,13 @@ const viewPageClicked = () => {
               padding: 4px 8px
               width: 610px
               border-radius: 8px
+              .step-input-wrapper-left
+                display: flex
+                align-items: center
+                .step-input-wrapper-image
+                  width: 24px
+                  height: 16px
+                  margin-right: 8px
               .copy
                 border-radius: 23px
                 background: #05FE9F
@@ -674,5 +773,35 @@ const viewPageClicked = () => {
                 font-size: 13px
                 line-height: 22px
                 font-weight: 500
+                color: #0A1B39
+              .step-input-wrapper-name-red
                 color: #D2202F
+            .step-input-wrapper-background
+              background: #FCFCFC
+              margin-top: 10px
+              .step-input-wrapper-name
+                color: rgba(10, 27, 57, 0.3)
+            .step-input-wrapper-border
+              border: 1px solid #000
+              margin-top: 10px
+            .delivery-notice-container
+              display: flex
+              align-items: center
+              margin-left: 10px
+              .delivery-notice
+                font-size: 12px
+                line-height: 22px
+                color: rgba(10, 27, 57, 0.55)
+                margin-left: 5px
+                text-decoration: underline
+            .step-input-wrapper-width
+              width: 275px
+            .step-input-wrapper-margin-right
+              margin-right: 10px
+            .qoo10-image
+              margin-right: 10px
+            .link-character
+              border-top: 1px solid #ccc
+              width: 28px
+              margin: 0 16px
 </style>

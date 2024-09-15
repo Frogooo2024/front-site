@@ -36,17 +36,42 @@ const whatsAppClicked = () => {
 }
 
 const copyBtnClicked = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text)
-    showToast({
-      message: t('Frogooo.SuccessfulCopy'),
-      position: 'bottom'
-    })
-  } catch (err) {
-    showToast({
-      message: t('Frogooo.CopyFailure'),
-      position: 'bottom'
-    })
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text)
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+  } else {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      document.execCommand('copy')
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+
+    document.body.removeChild(textArea)
   }
 }
 
@@ -112,37 +137,35 @@ const viewPageClicked = () => {
             <h4 class="item-input-container-title">Full Name *</h4>
             <div class="item-input-text-wrapper">
               <span class="item-input-text item-input-red-text">{{ userId }}</span>
-              <button class="copy" @touchstart="copyBtnClicked(userId ?? '')">Copy</button>
+              <button class="copy" @touchend="copyBtnClicked(userId ?? '')">Copy</button>
             </div>
           </div>
           <div class="item-input-container">
             <h4 class="item-input-container-title">Phone *</h4>
             <div class="item-input-text-wrapper">
               <span class="item-input-text">+65 83850022</span>
-              <button class="copy" @touchstart="copyBtnClicked('83850022')">Copy</button>
+              <button class="copy" @touchend="copyBtnClicked('83850022')">Copy</button>
             </div>
           </div>
           <div class="item-input-container">
             <h4 class="item-input-container-title">Postal Code *</h4>
             <div class="item-input-text-wrapper">
-              <span class="item-input-text">348741</span>
-              <button class="copy" @touchstart="copyBtnClicked('348741')">Copy</button>
+              <span class="item-input-text">349245</span>
+              <button class="copy" @touchend="copyBtnClicked('349245')">Copy</button>
             </div>
           </div>
           <div class="item-input-container">
             <h4 class="item-input-container-title">Street</h4>
             <div class="item-input-text-wrapper item-input-text-wrapper-background">
-              <span class="item-input-text">3 Lorong Bakar Batu</span>
-              <button class="copy" @touchstart="copyBtnClicked('3 Lorong Bakar Batu')">Copy</button>
+              <span class="item-input-text">158 Kallang Way</span>
+              <button class="copy" @touchend="copyBtnClicked('158 Kallang Way')">Copy</button>
             </div>
           </div>
           <div class="item-input-container">
             <h4 class="item-input-container-title">Address *</h4>
             <div class="item-input-text-wrapper">
-              <span class="item-input-text">Brightway building #02-04B</span>
-              <button class="copy" @touchstart="copyBtnClicked('Brightway building #02-04B')">
-                Copy
-              </button>
+              <span class="item-input-text">#06-10A</span>
+              <button class="copy" @touchend="copyBtnClicked('#06-10A')">Copy</button>
             </div>
           </div>
           <section class="tag-container">
@@ -220,38 +243,42 @@ const viewPageClicked = () => {
               <div class="step-input-flex-row-margin-left">
                 <h3 class="step-input-title">Full Name *</h3>
                 <div class="step-input-wrapper">
-                  <span class="step-input-wrapper-name">{{ userId }}</span>
+                  <span class="step-input-wrapper-name step-input-wrapper-name-red">{{
+                    userId
+                  }}</span>
                   <button class="copy" @click="copyBtnClicked(userId ?? '')">Copy</button>
                 </div>
               </div>
-              <img
-                class="step-input-wrapper-image"
-                src="../assets/icons/vipshop_1.png"
-                alt=""
-                @click="copyBtnClicked('348741')"
-              />
-              <img
-                class="step-input-wrapper-image"
-                src="../assets/icons/vipshop_2.png"
-                alt=""
-                @click="copyBtnClicked('3 Lorong Bakar Batu')"
-              />
+              <div class="step-input-flex-row-margin-left">
+                <h3 class="step-input-title">Postal Code *</h3>
+                <div class="step-input-wrapper">
+                  <span class="step-input-wrapper-name">349245</span>
+                  <button class="copy" @click="copyBtnClicked('349245')">Copy</button>
+                </div>
+              </div>
+              <div class="step-input-flex-row-margin-left">
+                <h3 class="step-input-title">Address *</h3>
+                <div class="step-input-wrapper">
+                  <span class="step-input-wrapper-name">158 Kallang Way</span>
+                  <button class="copy" @click="copyBtnClicked('158 Kallang Way')">Copy</button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="step-input">
             <div class="step-input-flex-row">
-              <img
-                class="step-input-wrapper-image"
-                src="../assets/icons/vipshop_3.png"
-                alt=""
-                @click="copyBtnClicked('83850022')"
-              />
-              <img
-                class="step-input-wrapper-image"
-                src="../assets/icons/vipshop_4.png"
-                alt=""
-                @click="copyBtnClicked('Brightway building #02-04B')"
-              />
+              <div class="step-input-flex-row-margin-left">
+                <h3 class="step-input-title">Phone *</h3>
+                <div class="step-input-wrapper">
+                  <span class="step-input-wrapper-name">SG +65 83850022</span>
+                  <button class="copy" @click="copyBtnClicked('83850022')">Copy</button>
+                </div>
+              </div>
+              <div class="step-input-flex-row-margin-left">
+                <h3 class="step-input-title">Address *</h3>
+                <div class="step-input-wrapper">
+                  <span class="step-input-wrapper-name">#06-10A</span>
+                  <button class="copy" @click="copyBtnClicked('#06-10A')">Copy</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="tag-wrapper">
@@ -530,7 +557,7 @@ const viewPageClicked = () => {
         .step-input-shadow
           box-shadow: 0 2px 20px 0 #eee
           border-radius: 16px
-          padding: 8px 4px
+          padding: 8px 14px 8px 4px
           margin-top: 16px
           .step-input-shadow-title
             font-size: 14px
@@ -549,8 +576,10 @@ const viewPageClicked = () => {
               display: flex
               align-items: center
               justify-content: space-between
+              margin-top: 15px
               .step-input-flex-row-margin-left
                 margin-left: 10px
+                flex: 1
             .step-input-wrapper-image
               height: 78px
             .step-input-wrapper-high-image
@@ -565,6 +594,7 @@ const viewPageClicked = () => {
               width: 165px
               border-radius: 2px
               margin-top: 5px
+              width: 100%
               .copy
                 border-radius: 23px
                 background: #05FE9F
@@ -578,12 +608,14 @@ const viewPageClicked = () => {
                 font-size: 13px
                 line-height: 22px
                 font-weight: 700
+                color: #000
+              .step-input-wrapper-name-red
                 color: #D2202F
           .tag-wrapper
             display: flex
             justify-content: start
             align-items: center
-            margin: 10px 0 0 10px
+            margin: 20px 0 0 10px
             .tag-item
                 border-radius: 2px
                 border: 0.5px solid rgba(10, 27, 57, 0.8)
@@ -598,6 +630,8 @@ const viewPageClicked = () => {
                 border: none
           .vipshop-image-save
             margin-top: 10px
+            display: flex
+            justify-content: end
             img
               height: 32px
 </style>

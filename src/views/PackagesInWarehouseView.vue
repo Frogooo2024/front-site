@@ -24,6 +24,7 @@ const showNoData = ref(false)
 const sendInProgress = ref(false)
 const showPreview = ref(false)
 let { selectedData } = useAddressStore()
+const eventName = isMobile ? ref('touchend') : ref('click')
 
 const { t } = useI18n()
 
@@ -85,9 +86,7 @@ const whatsAppClicked = () => {
 }
 
 const itemSelectClicked = (item: any) => {
-  setTimeout(() => {
-    item.selected = !item.selected
-  }, 50);
+  item.selected = !item.selected
 }
 
 const packageListItemClicked = (item: any) => {
@@ -183,24 +182,24 @@ const viewPageClicked = () => {
             class="package-list-item-wrapper"
           >
             <div class="package-list-item">
-              <div class="list-item" @click="itemSelectClicked(item)">
+              <a class="list-item" @click="itemSelectClicked(item)">
                 <img
                   src="../assets/icons/unselected.svg"
                   alt=""
                   class="list-item-image"
-                  v-if="!item.selected"
+                  v-show="!item.selected"
                 />
                 <img
                   src="../assets/icons/selected.svg"
                   alt=""
                   class="list-item-image"
-                  v-if="item.selected"
+                  v-show="item.selected"
                 />
                 <div class="list-item-wrapper">
                   <span class="list-item-detail">{{ item.transportNumber }}</span>
                   <span class="list-item-detail">{{ item.goodsTypeName }}</span>
                 </div>
-              </div>
+              </a>
               <div class="list-item-arrow">
                 <img
                   src="../assets/icons/arrow_right.svg"
@@ -251,22 +250,11 @@ const viewPageClicked = () => {
         </section>
         <section v-if="packageList?.rows?.length" class="confirm-and-pay-wrapper">
           <button
-            @touchstart="confirmAndPayClicked"
+            v-on:[eventName]="confirmAndPayClicked"
             class="confirm-and-pay"
             :class="{
               'confirm-and-pay-disable': !transportNumberArr || !transportNumberArr?.length
             }"
-            v-if="isMobile"
-          >
-            {{ $t('Frogooo.ConfirmAndPay') }}
-          </button>
-          <button
-            @click="confirmAndPayClicked"
-            class="confirm-and-pay"
-            :class="{
-              'confirm-and-pay-disable': !transportNumberArr || !transportNumberArr?.length
-            }"
-            v-else
           >
             {{ $t('Frogooo.ConfirmAndPay') }}
           </button>
@@ -338,7 +326,10 @@ const viewPageClicked = () => {
           .list-item
             display: flex
             align-items: center
+            -webkit-tap-highlight-color: #ccc
+            touch-action: manipulation
             justify-content: start
+            flex: 1
             .list-item-image
               margin-right: .1rem
             .list-item-wrapper
@@ -349,8 +340,6 @@ const viewPageClicked = () => {
                 font-size: .14rem
                 line-height: .18rem
                 font-weight: 500
-          .list-item:active
-            background: #ccc
       .address-container
         margin-top: .5rem
         display: flex
@@ -422,7 +411,7 @@ const viewPageClicked = () => {
           left: 0
           right: 0
       .package-in-warehouse-container
-        margin: 32px auto
+        margin: 32px auto 120px
         width: 800px
         display: flex
         flex-direction: column
@@ -457,12 +446,16 @@ const viewPageClicked = () => {
             justify-content: space-between
             margin: 32px 0 0 20px
             align-items: center
+            .list-item-arrow
+              display: flex
             .list-item
               display: flex
               align-items: center
               justify-content: start
               .list-item-image
                 margin-right: 10px
+                width: 22px
+                height: 22px
               .list-item-wrapper
                 display: flex
                 align-items: start
@@ -536,6 +529,7 @@ const viewPageClicked = () => {
               text-align: right
         .confirm-and-pay-wrapper
           margin: 50px auto 0
+          display: flex
           .confirm-and-pay
             border-radius: 16px
             background: #05FE9F

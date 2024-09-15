@@ -40,22 +40,47 @@ const address = reactive({
   contactCode: '+65',
   contactNumber: '83850022',
   country: 'Singapore',
-  detail: 'Union Industrial Center, 3 Lor Bakar Batu',
-  number: 'Brightway building #02-04B'
+  detail: 'PERFORMANCE BUILDING, 158 KALLANG WAY',
+  number: '#06-10A'
 })
 
 const copyBtnClicked = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text)
-    showToast({
-      message: t('Frogooo.SuccessfulCopy'),
-      position: 'bottom'
-    })
-  } catch (err) {
-    showToast({
-      message: t('Frogooo.CopyFailure'),
-      position: 'bottom'
-    })
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text)
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+  } else {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      document.execCommand('copy')
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+
+    document.body.removeChild(textArea)
   }
 }
 
@@ -141,7 +166,7 @@ const viewPageClicked = () => {
           <h3 class="shipping-country-title">Contact information</h3>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name country-name-red">{{ userId }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(userId ?? '')">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(userId ?? '')">Copy</button>
           </div>
           <div class="contact-container">
             <h3 class="contact-container-title">Please enter a contact name.</h3>
@@ -149,7 +174,7 @@ const viewPageClicked = () => {
               <div class="contact-country">{{ address.contactCode }}</div>
               <div class="contact-number">
                 <span class="number">{{ address.contactNumber }}</span>
-                <button class="copy" @touchstart="copyBtnClicked(`${address.contactNumber}`)">
+                <button class="copy" @touchend="copyBtnClicked(`${address.contactNumber}`)">
                   Copy
                 </button>
               </div>
@@ -159,7 +184,7 @@ const viewPageClicked = () => {
         <div class="shipping-country">
           <h3 class="shipping-country-title">Address</h3>
           <div class="shipping-country-wrapper">
-            <span class="shipping-country-name">348741</span>
+            <span class="shipping-country-name">349245</span>
             <img src="../assets/icons/arrow_right.svg" alt="" />
           </div>
           <div class="shipping-country-wrapper">
@@ -168,15 +193,15 @@ const viewPageClicked = () => {
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.country }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.country)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.country)">Copy</button>
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.detail }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.detail)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.detail)">Copy</button>
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.number }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.number)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.number)">Copy</button>
           </div>
         </div>
       </section>
@@ -254,36 +279,41 @@ const viewPageClicked = () => {
               <span class="step-input-wrapper-name step-input-wrapper-name-red">{{ userId }}</span>
               <button class="copy" @click="copyBtnClicked(userId ?? '')">Copy</button>
             </div>
-            <img
-              class="step-input-wrapper-image"
-              src="../assets/icons/aliexpress_3.png"
-              @click="copyBtnClicked('8385002')"
-              alt=""
-            />
+            <div class="step-input-wrapper">
+              <span class="step-input-wrapper-name"
+                >{{ address.contactCode }} {{ address.contactNumber }}</span
+              >
+              <button class="copy" @click="copyBtnClicked(address.contactNumber)">Copy</button>
+            </div>
           </div>
           <p class="step-input-warning">Please enter a contact name.</p>
         </div>
         <div class="step-input">
+          <h3 class="step-input-title">Address</h3>
           <div class="step-input-flex-row step-input-flex-end">
-            <img
-              class="step-input-widget-image"
-              src="../assets/icons/aliexpress_4.png"
-              alt=""
-              @click="copyBtnClicked('Union Industrial Center, 3 Lor Bakar Batu')"
-            />
             <div class="step-input-image-container">
-              <img
-                class="step-input-wrapper-image"
-                src="../assets/icons/aliexpress_2.png"
-                alt=""
-                @click="copyBtnClicked('Brightway building #02-04B')"
-              />
-              <img
-                class="step-input-wrapper-image step-input-wrapper-image-margin"
-                src="../assets/icons/aliexpress_1.png"
-                alt=""
-                @click="copyBtnClicked('Singapore')"
-              />
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">349245</span>
+                <img src="../assets/icons/arrow_right.svg" alt="" />
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.detail }}</span>
+                <button class="copy" @click="copyBtnClicked(address.detail)">Copy</button>
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">34 Macpherson Braddell</span>
+                <img src="../assets/icons/arrow_right.svg" alt="" />
+              </div>
+            </div>
+            <div class="step-input-image-container">
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.number }}</span>
+                <button class="copy" @click="copyBtnClicked(address.number)">Copy</button>
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">Singapore</span>
+                <button class="copy" @click="copyBtnClicked('Singapore')">Copy</button>
+              </div>
             </div>
           </div>
         </div>
@@ -477,7 +507,7 @@ const viewPageClicked = () => {
     overflow-y: auto
   .web-detial-wrapper
     width: 800px
-    margin: 10px auto
+    margin: 10px auto 120px
     .web-detial-step
       font-size: 16px
       line-height: 20px
@@ -597,6 +627,7 @@ const viewPageClicked = () => {
           border: 0.5px solid #CCCCCC
           padding: 8px
           width: 344px
+          margin-top: 10px
           .copy
             border-radius: 23px
             background: #05FE9F

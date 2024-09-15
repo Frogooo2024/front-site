@@ -47,8 +47,8 @@ onMounted(async () => {
     if (selectedData.cityCode.length) {
       Promise.all([
         api.getCity({ code: 'ID' }),
-        api.getCity({ code: selectedData.provinceSelected, key: selectedData.provinceSelected }),
-        api.getCity({ code: selectedData.citySelected, key: selectedData.citySelected })
+        api.getCity({ code: selectedData.provinceCode, key: 'code' }),
+        api.getCity({ code: selectedData.cityCode, key: 'code' })
       ]).then(
         (res: any) => {
           if (res[0].status && res[1].status && res[2].status) {
@@ -183,7 +183,7 @@ watch(selectedItem, async (newVal) => {
       cityData.value = []
       selectedData.provinceSelected = newVal.title
       selectedData.provinceCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       cityData.value = response?.data
     }
   } else if (newVal.id == 'city') {
@@ -192,7 +192,7 @@ watch(selectedItem, async (newVal) => {
       areaData.value = []
       selectedData.citySelected = newVal.title
       selectedData.cityCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       areaData.value = response?.data
     }
   } else if (newVal.id == 'area') {
@@ -288,12 +288,12 @@ watch(selectedItem, async (newVal) => {
           <input type="text" class="item-wrapper-number" v-model="selectedData.phone" />
         </div>
       </section>
-      <section class="item-default-wrapper" @click="setDefault">
+      <section class="item-default-wrapper" @touchend="setDefault">
         <img :src="defaultImageUrl" alt="" class="item-default-image" />
         <span class="item-default-address">{{ $t('Frogooo.DefaultAddress') }}</span>
       </section>
       <section class="item-submit">
-        <button class="item-submit-button" @touchstart="save">{{ $t('Frogooo.Save') }}</button>
+        <button class="item-submit-button" @touchend="save">{{ $t('Frogooo.Save') }}</button>
       </section>
     </div>
     <TrayPicker
@@ -345,6 +345,8 @@ watch(selectedItem, async (newVal) => {
             justify-content: space-between
             padding: .16rem
             border-bottom: 1px solid rgba(10, 27, 57, 0.04)
+            -webkit-tap-highlight-color: #ccc
+            touch-action: manipulation
             .select-item
               font-size: .18rem
               line-height: .22rem
@@ -390,6 +392,8 @@ watch(selectedItem, async (newVal) => {
             font-size: .16rem
             line-height: .19rem
             color: #0A1B39
+    .item-default-wrapper:active
+      background: #ccc
     .item-submit
         margin-top: .5rem
         .item-submit-button

@@ -174,6 +174,8 @@ const isMobile = useIsMobile()
                       font-size: .14rem
                       line-height: .20rem
                       color: #fff
+                      -webkit-tap-highlight-color: #05fe9f
+                      touch-action: manipulation
                     .item-a:active
                         color: #05fe9f
       .our-address-bottom

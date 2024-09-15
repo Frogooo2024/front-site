@@ -31,6 +31,7 @@ const showNoData = ref(false)
 const isEdited = ref(false)
 const sendInProgress = ref(false)
 const isAddFristAddress = ref(false)
+const eventName = isMobile ? ref('touchend') : ref('click')
 
 onMounted(async () => {
   document.body.classList.add('background-gray')
@@ -217,16 +218,16 @@ const viewPageClicked = () => {
         </section>
         <div v-if="isMobile">
           <section class="item-wrapper" v-for="(item, index) in addressList" :key="index">
-            <div class="item-container" @click="selectAddressClicked(item)">
+            <a class="item-container" @click="selectAddressClicked(item)">
               <img
                 src="../assets/icons/unselected.svg"
-                v-if="item.isDefault == 'N'"
+                v-show="item.isDefault == 'N'"
                 alt=""
                 class="item-container-image"
               />
               <img
                 src="../assets/icons/address_selected.svg"
-                v-if="item.isDefault == 'Y'"
+                v-show="item.isDefault == 'Y'"
                 alt=""
                 class="item-container-image"
               />
@@ -234,23 +235,23 @@ const viewPageClicked = () => {
                 >{{ item.name }}, {{ item.phone }}, {{ item.province }}, {{ item.city }},
                 {{ item.county }}, {{ item.address }}</span
               >
-            </div>
+            </a>
             <div class="item-button-container">
-              <div class="item-default-container" @click="setDefault(item)">
+              <a class="item-default-container" @click="setDefault(item)">
                 <img
                   src="../assets/icons/unselected.svg"
-                  v-if="item.isDefault == 'N'"
+                  v-show="item.isDefault == 'N'"
                   alt=""
                   class="item-default-image"
                 />
                 <img
                   src="../assets/icons/address_selected.svg"
-                  v-if="item.isDefault == 'Y'"
+                  v-show="item.isDefault == 'Y'"
                   alt=""
                   class="item-default-image"
                 />
                 <span class="item-default-title">{{ $t('Frogooo.DefaultAddress') }}</span>
-              </div>
+              </a>
               <div class="item-button-wrapper">
                 <div class="item-button" @click="deleteItem(item)">
                   <img src="../assets/icons/delete.png" alt="" />
@@ -267,13 +268,13 @@ const viewPageClicked = () => {
             <div class="item-container" @click="selectAddressClicked(item)">
               <img
                 src="../assets/icons/unselected.svg"
-                v-if="item.isDefault == 'N'"
+                v-show="item.isDefault == 'N'"
                 alt=""
                 class="item-container-image"
               />
               <img
                 src="../assets/icons/address_selected.svg"
-                v-if="item.isDefault == 'Y'"
+                v-show="item.isDefault == 'Y'"
                 alt=""
                 class="item-container-image"
               />
@@ -287,13 +288,13 @@ const viewPageClicked = () => {
                 <div class="item-default-container" @click="setDefault(item)">
                   <img
                     src="../assets/icons/unselected.svg"
-                    v-if="item.isDefault == 'N'"
+                    v-show="item.isDefault == 'N'"
                     alt=""
                     class="item-default-image"
                   />
                   <img
                     src="../assets/icons/address_selected.svg"
-                    v-if="item.isDefault == 'Y'"
+                    v-show="item.isDefault == 'Y'"
                     alt=""
                     class="item-default-image"
                   />
@@ -312,7 +313,9 @@ const viewPageClicked = () => {
           </section>
         </div>
         <section class="add-button-container">
-          <button class="add-button" @click="add()">{{ $t('Frogooo.AddNewAddress') }}</button>
+          <button class="add-button" v-on:[eventName]="add()">
+            {{ $t('Frogooo.AddNewAddress') }}
+          </button>
         </section>
       </div>
       <div class="footer" v-if="!isMobile">
@@ -322,7 +325,7 @@ const viewPageClicked = () => {
     <div class="no-data-container" v-if="showNoData && isMobile" @click="viewPageClicked">
       <div class="no-data-wrapper">
         <p class="no-data-title">{{ $t('Frogooo.NoAddress') }}</p>
-        <button class="no-data-button" @touchstart="add()">
+        <button class="no-data-button" @touchend="add()">
           {{ $t('Frogooo.AddNewAddress') }}
         </button>
       </div>
@@ -386,6 +389,8 @@ const viewPageClicked = () => {
           .item-container
             display: flex
             align-items: center
+            -webkit-tap-highlight-color: #ccc
+            touch-action: manipulation
             .item-container-image
               width: .22rem
               height: .22rem
@@ -396,6 +401,8 @@ const viewPageClicked = () => {
               color: #0A1B39
           .item-container:active
             background: #ccc
+          .item-container-xxx
+            background: red
           .item-button-container
             display: flex
             align-items: center
@@ -405,6 +412,8 @@ const viewPageClicked = () => {
             .item-default-container
               display: flex
               align-items: center
+              -webkit-tap-highlight-color: #ccc
+              touch-action: manipulation
               .item-default-image
                 width: .22rem
                 height: .22rem
@@ -424,6 +433,7 @@ const viewPageClicked = () => {
                   height: .24rem
       .add-button-container
         margin-top: .5rem
+        display: flex
         .add-button
           border-radius: .16rem
           padding: .12rem .24rem
@@ -508,6 +518,7 @@ const viewPageClicked = () => {
             align-items: center
             justify-content: space-between
             .item-container
+              display: flex
               .item-container-image
                 width: 22px
                 height: 22px
@@ -543,6 +554,7 @@ const viewPageClicked = () => {
                   display: flex
                   align-items: center
                   .item-button
+                    display:flex
                     img
                       width: 40px
                       height: 24px

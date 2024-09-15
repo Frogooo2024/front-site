@@ -11,6 +11,7 @@ import useIsMobile from '../hooks/useIsMobile'
 const router = useRouter()
 const showMorePage = ref(false)
 const isMobile = useIsMobile()
+const eventName = isMobile ? ref('touchend') : ref('click')
 
 onMounted(() => {
   document.body.classList.add('background-white')
@@ -65,7 +66,9 @@ const viewPageClicked = () => {
           </div>
         </section>
         <section class="item-submit">
-          <button class="item-submit-button" @click="goBack">{{ $t('Frogooo.OK') }}</button>
+          <button class="item-submit-button" v-on:[eventName]="goBack">
+            {{ $t('Frogooo.OK') }}
+          </button>
         </section>
       </div>
       <div v-if="!isMobile">

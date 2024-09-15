@@ -36,17 +36,42 @@ const whatsAppClicked = () => {
 }
 
 const copyBtnClicked = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text)
-    showToast({
-      message: t('Frogooo.SuccessfulCopy'),
-      position: 'bottom'
-    })
-  } catch (err) {
-    showToast({
-      message: t('Frogooo.CopyFailure'),
-      position: 'bottom'
-    })
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text)
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+  } else {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      document.execCommand('copy')
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+
+    document.body.removeChild(textArea)
   }
 }
 
@@ -85,6 +110,14 @@ const viewPageClicked = () => {
           <div class="first-use-image">
             <img src="../assets/icons/taobao_detail.png" alt="" />
           </div>
+          <p class="first-use-subtitle">{{ $t('Frogooo.SwitchRegion') }}</p>
+        </section>
+        <section class="first-use second-use">
+          <h3 class="first-use-title">{{ $t('Frogooo.SwitchLanguage') }}</h3>
+          <div class="first-use-image">
+            <img src="../assets/icons/taobao_detail_two.png" alt="" />
+          </div>
+          <p class="first-use-subtitle">{{ $t('Frogooo.ChangeEnglish') }}</p>
         </section>
       </div>
       <section class="shipping-container">
@@ -109,26 +142,43 @@ const viewPageClicked = () => {
         </div>
         <div class="item-container">
           <section class="item-title-wrapper">
-            <span class="item-title">地址信息</span>
-            <div class="item-subtitle-wrapper">
-              <img src="../assets/icons/unselect.svg" alt="" />
-              <span class="item-subtitle">默认收货地址</span>
-            </div>
+            <span class="item-title-wrapper-symbol">*</span>
+            <span class="item-title">Singapore</span>
+            <img src="../assets/icons/arrow_down.svg" alt="" />
           </section>
           <div class="item-input-container">
             <h4 class="item-input-container-title">
-              <span>收件人</span>
               <span class="item-input-container-symbol">*</span>
+              <span class="item-input-container-text"
+                >Full address (incl. floor and unit number )</span
+              >
             </h4>
             <div class="item-input-text-wrapper">
-              <span class="item-input-text item-input-red-text">{{ userId }}</span>
-              <button class="copy" @touchstart="copyBtnClicked(userId ?? '')">Copy</button>
+              <span class="item-input-text"
+                >349245, 158 KALLANG WAY - PERFORMANCE BUILDING #06-10A</span
+              >
+              <button
+                class="copy"
+                @touchend="copyBtnClicked('349245, 158 KALLANG WAY - PERFORMANCE BUILDING #06-10A')"
+              >
+                Copy
+              </button>
             </div>
           </div>
           <div class="item-input-container">
             <h4 class="item-input-container-title">
-              <span>手机号</span>
               <span class="item-input-container-symbol">*</span>
+              <span class="item-input-container-text">Full name</span>
+            </h4>
+            <div class="item-input-text-wrapper">
+              <span class="item-input-text item-input-red-text">{{ userId }}</span>
+              <button class="copy" @touchend="copyBtnClicked(userId ?? '')">Copy</button>
+            </div>
+          </div>
+          <div class="item-input-container">
+            <h4 class="item-input-container-title">
+              <span class="item-input-container-symbol">*</span>
+              <span class="item-input-container-text">Phone Number</span>
             </h4>
             <div class="item-input-text-wrapper">
               <div class="item-input-text-container">
@@ -136,48 +186,17 @@ const viewPageClicked = () => {
                 <img src="../assets/icons/arrow_down.svg" alt="" />
                 <span class="item-input-text">83850022</span>
               </div>
-              <button class="copy" @touchstart="copyBtnClicked('88257050')">Copy</button>
+              <button class="copy" @touchend="copyBtnClicked('88257050')">Copy</button>
             </div>
           </div>
           <div class="item-input-container">
             <h4 class="item-input-container-title">
-              <span>所在地区</span>
               <span class="item-input-container-symbol">*</span>
+              <span class="item-input-container-text">Postal code</span>
             </h4>
             <div class="item-input-text-wrapper">
-              <span class="item-input-text">新加坡</span>
-              <img src="../assets/icons/arrow_right.svg" alt="" />
-            </div>
-          </div>
-          <div class="item-input-container">
-            <h4 class="item-input-container-title">
-              <span>邮政编码</span>
-              <span class="item-input-container-symbol">*</span>
-            </h4>
-            <div class="item-input-text-wrapper">
-              <span class="item-input-text">348741</span>
-              <button class="copy" @touchstart="copyBtnClicked('348741')">Copy</button>
-            </div>
-          </div>
-          <div class="item-input-container">
-            <h4 class="item-input-container-title">
-              <span>详细地址</span>
-              <span class="item-input-container-symbol">*</span>
-            </h4>
-            <div class="item-input-text-wrapper">
-              <span class="item-input-text"
-                >3 Lorong Bakar Batu - Union Industrial Center, Brightway building #02-04B</span
-              >
-              <button
-                class="copy"
-                @touchstart="
-                  copyBtnClicked(
-                    '3 Lorong Bakar Batu - Union Industrial Center, Brightway building #02-04B'
-                  )
-                "
-              >
-                Copy
-              </button>
+              <span class="item-input-text">349245</span>
+              <button class="copy" @touchend="copyBtnClicked('349245')">Copy</button>
             </div>
           </div>
         </div>
@@ -241,43 +260,60 @@ const viewPageClicked = () => {
         </section>
         <div class="step-input-shadow">
           <div class="step-input">
-            <img
-              class="step-input-image"
-              src="../assets/icons/tao_1.png"
-              alt=""
-              @click="copyBtnClicked('83850022')"
-            />
-            <img
-              class="step-input-image"
-              src="../assets/icons/tao_3.png"
-              alt=""
-              @click="copyBtnClicked('348741')"
-            />
-            <img
-              class="step-input-image"
-              src="../assets/icons/tao_4.png"
-              alt=""
-              @click="
-                copyBtnClicked(
-                  '3 Lorong Bakar Batu - Union Industrial Center, Brightway building #02-04B'
-                )
-              "
-            />
-            <div class="step-input step-input-margin">
-              <div class="step-input-flex-row">
-                <h3 class="step-input-title">*收件人姓名(Usemame):</h3>
-                <div class="step-input-wrapper">
-                  <span class="step-input-wrapper-name">{{ userId }}</span>
-                  <button class="copy" @click="copyBtnClicked(userId ?? '')">Copy</button>
-                </div>
+            <img class="step-input-image" src="../assets/icons/tao_1.png" alt="" />
+            <div class="step-input-flex-row">
+              <div class="step-input-title-container">
+                <h3 class="step-input-title">*详细地址</h3>
+                <h3 class="step-input-title">(Detail):</h3>
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name"
+                  >349245, 158 KALLANG WAY - PERFORMANCE BUILDING #06-10A</span
+                >
+                <button
+                  class="copy"
+                  @click="copyBtnClicked('349245, 158 KALLANG WAY - PERFORMANCE BUILDING #06-10A')"
+                >
+                  Copy
+                </button>
               </div>
             </div>
-            <img
-              class="step-input-image"
-              src="../assets/icons/tao_2.png"
-              alt=""
-              @click="copyBtnClicked('83850022')"
-            />
+            <div class="step-input-flex-row">
+              <div class="step-input-title-container">
+                <h3 class="step-input-title">邮政编码</h3>
+                <h3 class="step-input-title">(Postcode):</h3>
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">349245</span>
+                <button class="copy" @click="copyBtnClicked('349245')">Copy</button>
+              </div>
+            </div>
+            <div class="step-input-flex-row">
+              <div class="step-input-title-container">
+                <h3 class="step-input-title">*收件人姓名</h3>
+                <h3 class="step-input-title">(Usemame):</h3>
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name step-input-wrapper-name-red">{{
+                  userId
+                }}</span>
+                <button class="copy" @click="copyBtnClicked(userId ?? '')">Copy</button>
+              </div>
+            </div>
+            <div class="step-input-flex-row">
+              <div class="step-input-title-container">
+                <h3 class="step-input-title">*手机号码</h3>
+                <h3 class="step-input-title">(Mobile):</h3>
+              </div>
+              <div class="step-input-wrapper step-input-wrapper-short">
+                <span class="step-input-wrapper-name">新加坡 +65</span>
+                <img src="../assets/icons/arrow_down.svg" alt="" />
+              </div>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">83850022</span>
+                <button class="copy" @click="copyBtnClicked('83850022')">Copy</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -336,6 +372,13 @@ const viewPageClicked = () => {
               img
                   width: 100%
                   height: 100%
+          .first-use-subtitle
+            font-size: .12rem
+            line-height: .18rem
+            color: #0A1B39
+            margin-top: .1rem
+      .second-use
+        margin-top: .2rem
     .shipping-container
       position: relative
       margin: .2rem .2rem 0
@@ -379,65 +422,50 @@ const viewPageClicked = () => {
                   line-height: .18rem
                   color: rgba(10, 27, 57, 0.6)
       .item-container
-          padding: .08rem
+          padding: .16rem
           margin-top: .3rem
           box-shadow: 0 .02rem .2rem 0 #eee
           .item-title-wrapper
               display: flex
-              justify-content: space-between
               align-items: center
-              margin-top: .1rem
+              .item-title-wrapper-symbol
+                color: #D2202F
               .item-title
-                  font-size: .16rem
-                  line-height: .22rem
-                  font-weight: 600
+                  font-size: .12rem
+                  line-height: .20rem
                   color: #0A1B39
-              .item-subtitle-wrapper
-                  display: flex
-                  align-items: center
-                  justify-content: space-between
-                  img
-                      width: .14rem
-                      height: .14rem
-                      margin-right: .05rem
-                  .item-subtitle
-                      font-size: .13rem
-                      line-height: .22rem
-                      font-weight: 500
+                  margin-right: .05rem
           .item-input-container
               display: flex
               margin-top: .16rem
-              align-items: center
-              justify-content: space-between
+              flex-direction: column
               .item-input-container-title
-                  flex: 0.3
-                  font-size: .13rem
-                  line-height: .22rem
-                  color: #0A1B39
                   display: flex
                   align-items: center
                   .item-input-container-symbol
                     color: #D2202F
+                  .item-input-container-text
+                    font-size: .12rem
+                    line-height: .16rem
+                    color: rgba(10, 27, 57, 0.5)
               .item-input-text-wrapper
-                  flex: 0.8
                   display: flex
                   justify-content: space-between
                   align-items: center
-                  border-radius: .08rem
-                  padding: .1rem .08rem
-                  background: #F9F9F9
+                  padding: .1rem .08rem .1rem 0
+                  border-bottom: 1px solid rgba(153, 153, 153, 0.1)
                   .item-input-text-container
                     display: flex
                     align-items: center
                     img
                       margin-right: .08rem
                   .item-input-text
-                      font-size: .13rem
-                      line-height: .22rem
-                      color: #000
+                      font-size: .16rem
+                      line-height: .20rem
+                      color: #0A1B39
+                      font-weight: 500
                   .item-input-red-text
                       color: #D2202F
-                      font-size: .13rem
                       font-weight: 600
                   .copy
                       border-radius: .23rem
@@ -450,11 +478,6 @@ const viewPageClicked = () => {
                       text-decoration: underline
                   .copy:active
                       background: #e9ecef
-              .item-input-container-subtitle
-                  font-size: .12rem
-                  line-height: .22rem
-                  font-weight: 500
-                  color: rgba(0, 0, 0, 0.8)
 @media (min-width: 1024px)
   .taobao-detial-view
       width: 100%
@@ -565,12 +588,17 @@ const viewPageClicked = () => {
             .step-input-flex-row
               display: flex
               align-items: center
-              .step-input-title
-                font-size: 13px
-                line-height: 22px
-                color: rgba(10, 27, 57, 0.6)
-                width: 72px
+              margin-top: 16px
+              .step-input-title-container
+                display: flex
+                flex-direction: column
+                align-items: center
                 margin-right: 15px
+                width: 72px
+                .step-input-title
+                  font-size: 13px
+                  line-height: 22px
+                  color: rgba(10, 27, 57, 0.6)
             .step-input-wrapper
               display: flex
               justify-content: space-between
@@ -578,7 +606,7 @@ const viewPageClicked = () => {
               border-radius: 8px
               border: 1px solid #CCCCCC
               padding: 10px 8px
-              width: 100%
+              flex-grow: 1
               .copy
                 border-radius: 23px
                 background: #05FE9F
@@ -591,8 +619,11 @@ const viewPageClicked = () => {
               .step-input-wrapper-name
                 font-size: 14px
                 line-height: 22px
-                font-weight: 600
+                font-weight: 500
+                color: #000
+              .step-input-wrapper-name-red
                 color: #D2202F
-          .step-input-margin
-            margin: 10px 10px 0
+            .step-input-wrapper-short
+              flex-grow: 0.3
+              margin-right: 16px
 </style>

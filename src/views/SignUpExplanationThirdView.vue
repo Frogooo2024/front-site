@@ -9,6 +9,7 @@ import useIsMobile from '../hooks/useIsMobile'
 const router = useRouter()
 const isMobile = useIsMobile()
 const showMorePage = ref(false)
+const eventName = isMobile ? ref('touchend') : ref('click')
 
 const onMoreButtonClicked = () => {
   showMorePage.value = true
@@ -20,14 +21,10 @@ const whatsAppClicked = () => {
   window.open('https://wa.me/message/UGN2RVXLNV4LH1', '_blank')
 }
 const skipClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/userCenter' })
-  }, 60)
+  router.push({ path: '/userCenter' })
 }
 const receivingAddressClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/addressList' })
-  }, 60)
+  router.push({ path: '/addressList' })
 }
 </script>
 
@@ -47,10 +44,10 @@ const receivingAddressClicked = () => {
         <p>{{ $t('Frogooo.IndonesianDeliveryAddress') }}</p>
       </section>
       <section class="receiving-address-container">
-        <div class="receiving-address" @click="receivingAddressClicked">
+        <div class="receiving-address" v-on:[eventName]="receivingAddressClicked">
           {{ $t('Frogooo.ReceivingAddress') }}
         </div>
-        <div class="skip" @click="skipClicked">{{ $t('Frogooo.Skip') }}</div>
+        <div class="skip" v-on:[eventName]="skipClicked">{{ $t('Frogooo.Skip') }}</div>
       </section>
       <div class="indonesian-image">
         <img src="../assets/icons/indonesian_inset.png" alt="" v-if="isMobile" />

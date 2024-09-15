@@ -38,25 +38,23 @@ const whatsAppClicked = () => {
   window.open('https://wa.me/message/UGN2RVXLNV4LH1', '_blank')
 }
 const itemClicked = (item: any) => {
-  setTimeout(() => {
-    if (item.itemName == 'AliExpress') {
-      router.push({ path: '/aliExpressDetail' })
-    } else if (item.itemName == 'SHEIN') {
-      router.push({ path: '/sheinDetail' })
-    } else if (item.itemName == 'Taobao') {
-      router.push({ path: '/taobaoDetail' })
-    } else if (item.itemName == 'Qoo10') {
-      router.push({ path: '/qoo10Detail' })
-    } else if (item.itemName == 'Ebay') {
-      router.push({ path: '/ebayDetail' })
-    } else if (item.itemName == 'lululemon') {
-      router.push({ path: '/luLuLemonDetail' })
-    } else if (item.itemName == 'Vipshop') {
-      router.push({ path: '/vipshopDetail' })
-    } else if (item.itemName == 'Amazon') {
-      router.push({ path: '/amazonDetail' })
-    }
-  }, 60)
+  if (item.itemName == 'AliExpress') {
+    router.push({ path: '/aliExpressDetail' })
+  } else if (item.itemName == 'SHEIN') {
+    router.push({ path: '/sheinDetail' })
+  } else if (item.itemName == 'Taobao') {
+    router.push({ path: '/taobaoDetail' })
+  } else if (item.itemName == 'Qoo10') {
+    router.push({ path: '/qoo10Detail' })
+  } else if (item.itemName == 'Ebay') {
+    router.push({ path: '/ebayDetail' })
+  } else if (item.itemName == 'lululemon') {
+    router.push({ path: '/luLuLemonDetail' })
+  } else if (item.itemName == 'Vipshop') {
+    router.push({ path: '/vipshopDetail' })
+  } else if (item.itemName == 'Amazon') {
+    router.push({ path: '/amazonDetail' })
+  }
 }
 const itemList = ref([
   {
@@ -103,23 +101,48 @@ const itemList = ref([
 
 const address = reactive({
   singaporeConsignee: userId,
-  SingaporeAddress: '3 lorong bakar batu. brightway building. #02-04B singapore 348741'
+  SingaporeAddress: '#06-10A of 158 Kallang Way Singapore 349245'
 })
 
 const copyBtnClicked = async () => {
-  try {
-    await navigator.clipboard.writeText(
-      `${address.singaporeConsignee} +65 8385 0022    ${address.SingaporeAddress}`
-    )
-    showToast({
-      message: t('Frogooo.SuccessfulCopy'),
-      position: 'bottom'
-    })
-  } catch (err) {
-    showToast({
-      message: t('Frogooo.CopyFailure'),
-      position: 'bottom'
-    })
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(
+        `${address.singaporeConsignee} +65 8385 0022    ${address.SingaporeAddress}`
+      )
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+  } else {
+    const textArea = document.createElement('textarea')
+    textArea.value = `${address.singaporeConsignee} +65 8385 0022    ${address.SingaporeAddress}`
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      document.execCommand('copy')
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+
+    document.body.removeChild(textArea)
   }
 }
 const viewPageClicked = () => {
@@ -147,7 +170,7 @@ const viewPageClicked = () => {
         </div>
       </section>
       <section class="address-list-item-container">
-        <div
+        <a
           class="list-item-wrapper"
           v-for="(item, index) in itemList"
           :key="index"
@@ -160,7 +183,7 @@ const viewPageClicked = () => {
             <span class="item-detail">{{ item.itemName }}</span>
             <img src="../assets/icons/arrow_right.svg" alt="" />
           </div>
-        </div>
+        </a>
       </section>
       <section class="shipping-container" v-if="!isMobile">
         <div class="shipping-wrapper">
@@ -184,7 +207,7 @@ const viewPageClicked = () => {
     <section class="shipping-container" v-if="isMobile" @click="viewPageClicked">
       <div class="shipping-wrapper">
         <p class="shipping-info">{{ $t('Frogooo.SingaporeShippingInformation') }}</p>
-        <button class="copy" @touchstart="copyBtnClicked">{{ $t('Frogooo.Copy') }}</button>
+        <button class="copy" @touchend="copyBtnClicked">{{ $t('Frogooo.Copy') }}</button>
       </div>
       <div class="item-wrapper">
         <span class="item-title">{{ $t('Frogooo.SingaporeConsignee') }}:</span>
@@ -233,6 +256,8 @@ const viewPageClicked = () => {
           display: flex
           justify-content: space-between
           align-items: center
+          -webkit-tap-highlight-color: #ccc
+          touch-action: manipulation
           .list-item-brand
             height: .68rem
             .list-item-image
@@ -245,8 +270,6 @@ const viewPageClicked = () => {
               font-size: .14rem
               line-height: .17rem
               margin-right: .15rem
-        .list-item-wrapper:active
-          background: #ccc
     .shipping-container
       margin: .1rem .2rem 0
       display: flex
@@ -322,6 +345,8 @@ const viewPageClicked = () => {
           height: 48px
           .list-item-brand
             height: 100%
+            display: flex
+            align-items: center
             .list-item-image
               height: 100%
           .list-item-detail

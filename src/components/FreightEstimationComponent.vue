@@ -30,8 +30,8 @@ onMounted(async () => {
     if (selectedData.cityCode.length) {
       Promise.all([
         api.getCity({ code: 'ID' }),
-        api.getCity({ code: selectedData.provinceSelected, key: selectedData.provinceSelected }),
-        api.getCity({ code: selectedData.citySelected, key: selectedData.citySelected })
+        api.getCity({ code: selectedData.provinceCode, key: 'code' }),
+        api.getCity({ code: selectedData.cityCode, key: 'code' })
       ]).then(
         (res: any) => {
           if (res[0].status && res[1].status && res[2].status) {
@@ -122,7 +122,7 @@ watch(selectedItem, async (newVal) => {
       areaData.value = []
       selectedData.provinceSelected = newVal.title
       selectedData.provinceCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       cityData.value = response?.data
     }
   } else if (newVal.id == 'city') {
@@ -132,7 +132,7 @@ watch(selectedItem, async (newVal) => {
       areaData.value = []
       selectedData.citySelected = newVal.title
       selectedData.cityCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       areaData.value = response?.data
     }
   } else if (newVal.id == 'area') {
@@ -156,9 +156,7 @@ const weightOfTheProductClicked = () => {
 }
 
 const probitionListItemsClicked = () => {
-  setTimeout(() => {
-    emit('probition-list-items-clicked')
-  }, 80)
+  emit('probition-list-items-clicked')
 }
 </script>
 <template>
@@ -257,14 +255,14 @@ const probitionListItemsClicked = () => {
         </div>
         <p class="input-warn-detail" v-if="weight > 9.5">{{ $t('Frogooo.CustomerService') }}</p>
       </section>
-      <section class="list-itmes" @click="probitionListItemsClicked">
+      <section class="list-itmes" @touchend="probitionListItemsClicked">
         <span>{{ $t('Frogooo.DANGEROUSGOODS') }}</span>
         <img src="../assets/icons/arrow_right.svg" class="item-arrow" alt="" />
       </section>
       <section class="item-wrapper">
         <button
           :class="{ 'estimate-btn': totalCost > 0, 'estimate-disable-btn': totalCost <= 0 }"
-          @touchstart="sendClicked"
+          @touchend="sendClicked"
         >
           {{ $t('Frogooo.Send') }}
         </button>
@@ -316,6 +314,8 @@ const probitionListItemsClicked = () => {
       display: flex
       justify-content: space-between
       align-items: center
+      -webkit-tap-highlight-color: #ccc
+      touch-action: manipulation
       span
         font-size: .16rem
         font-weight: 500

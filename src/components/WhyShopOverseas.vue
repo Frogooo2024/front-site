@@ -13,12 +13,13 @@ const whyShopData = [
   {
     imageUrl: new URL('../assets/icons/number1.png', import.meta.url).href,
     title: 'Frogooo.CrownTitle',
-    subtitle: 'Frogooo.Days',
+    subtitle: 'Frogooo.CrownSubtitle',
     description: 'Frogooo.CrownDescription'
   },
   {
     imageUrl: new URL('../assets/icons/number2.png', import.meta.url).href,
-    title: 'Frogooo.ChoiceTitle',
+    title: isMobile ? 'Frogooo.ChoiceTitle' : 'Frogooo.ChoicePcTitle',
+    titleOther: 'Frogooo.ChoiceTitleOther',
     subtitle: 'Frogooo.FreeStorage',
     description: 'Frogooo.ChoiceDescription'
   },
@@ -43,7 +44,11 @@ const whyShopData = [
     >
       <section class="why-shop-title-container">
         <img class="why-shop-image" :src="item.imageUrl" alt="" v-if="!isMobile" />
-        <h3 class="why-shop-title">{{ $t(item.title) }}</h3>
+        <div class="special-treatment" v-if="isMobile">
+          <h3 class="why-shop-title">{{ $t(item.title) }}</h3>
+          <h3 class="why-shop-title" v-if="item.titleOther">{{ $t(item.titleOther) }}</h3>
+        </div>
+        <h3 class="why-shop-title" v-else>{{ $t(item.title) }}</h3>
         <img class="why-shop-image" :src="item.imageUrl" alt="" v-if="isMobile" />
       </section>
       <section class="why-shop-description-container">
@@ -123,15 +128,16 @@ const whyShopData = [
         display: flex
         justify-content: space-between
         align-items: center
-        .why-shop-title
-          font-size: .17rem
-          line-height: .26rem
-          font-weight: 500
-          width: 1.9rem
-          color: transparent
-          background: linear-gradient(to right, #D99CEF, #EFD5F8)
-          background-clip: text
-          -webkit-background-clip: text
+        .special-treatment
+          .why-shop-title
+            font-size: .17rem
+            line-height: .26rem
+            font-weight: 500
+            width: 1.9rem
+            color: transparent
+            background: linear-gradient(to right, #D99CEF, #EFD5F8)
+            background-clip: text
+            -webkit-background-clip: text
         .why-shop-image
           width: .8rem
           height: .8rem

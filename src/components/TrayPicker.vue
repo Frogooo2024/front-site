@@ -11,35 +11,37 @@ const props = defineProps<Props>()
 
 const emit = defineEmits(['close'])
 
-const selectedIndex = ref(-1)
-const selectedCityIndex = ref(-1)
-const selectedAreaIndex = ref(-1)
-const selectedProvinceIndex = ref(-1)
+const selectedName = ref('')
+const selectedCityName = ref('')
+const selectedAreaName = ref('')
+const selectedProvinceName = ref('')
 
 if (props.flag == 'language') {
   const storageLanguage = window.localStorage.getItem('frgoooLanguage')
   if (storageLanguage) {
-    storageLanguage.includes('id-ID') ? (selectedIndex.value = 1) : (selectedIndex.value = 0)
+    storageLanguage.includes('id-ID')
+      ? (selectedName.value = 'Bahasa indonesia')
+      : (selectedName.value = 'English')
   } else {
-    navigator.language.includes('id-ID') ? (selectedIndex.value = 1) : (selectedIndex.value = 0)
+    navigator.language.includes('id-ID')
+      ? (selectedName.value = 'Bahasa indonesia')
+      : (selectedName.value = 'English')
   }
 }
 
 const selectedItem = defineModel<any>('selectedItem')
-const selectItem = (item: any, index: any) => {
-  setTimeout(() => {
-    if (item.id == 'province') {
-      selectedProvinceIndex.value = index
-    } else if (item.id == 'city') {
-      selectedCityIndex.value = index
-    } else if (item.id == 'area') {
-      selectedAreaIndex.value = index
-    } else {
-      selectedIndex.value = index
-    }
-    selectedItem.value = item
-    emit('close')
-  }, 60);
+const selectItem = (item: any) => {
+  if (item.id == 'province') {
+    selectedProvinceName.value = item.title
+  } else if (item.id == 'city') {
+    selectedCityName.value = item.title
+  } else if (item.id == 'area') {
+    selectedAreaName.value = item.title
+  } else {
+    selectedName.value = item
+  }
+  selectedItem.value = item
+  emit('close')
 }
 
 const close = () => {
@@ -50,11 +52,11 @@ watch(
   () => props.items,
   (val: any) => {
     if (val[0].id == 'province') {
-      selectedIndex.value = selectedProvinceIndex.value
+      selectedName.value = selectedProvinceName.value
     } else if (val[0].id == 'city') {
-      selectedIndex.value = selectedCityIndex.value
+      selectedName.value = selectedCityName.value
     } else if (val[0].id == 'area') {
-      selectedIndex.value = selectedAreaIndex.value
+      selectedName.value = selectedAreaName.value
     }
   }
 )
@@ -83,10 +85,9 @@ watch(
               <li
                 v-for="(item, index) in items"
                 :key="index"
-                @click="selectItem(item, index)"
-                :class="{ 'slected-item': index == selectedIndex }"
+                :class="{ 'slected-item': item.title == selectedName || item == selectedName }"
               >
-                <div class="select-item-wrapper">
+                <a class="select-item-wrapper" @click="selectItem(item)">
                   <img
                     src="../assets/icons/english.png"
                     alt=""
@@ -100,12 +101,12 @@ watch(
                     v-if="index == 1 && flag == 'language'"
                   />
                   <span class="select-item">{{ item.title ?? item }}</span>
-                </div>
+                </a>
                 <img
                   src="../assets/icons/right.png"
                   class="slected"
                   alt=""
-                  v-if="index == selectedIndex"
+                  v-if="item.title == selectedName || item == selectedName"
                 />
               </li>
             </ul>
@@ -145,16 +146,18 @@ watch(
   .tray-content
       overflow-y: auto
       padding-bottom: .12rem
-  .tray-content 
+  .tray-content
     li
       display: flex
-      padding: .12rem .2rem
       text-align: start
-      cursor: pointer
       justify-content: space-between
       align-items: center
       .select-item-wrapper
         display: flex
+        padding: .12rem .2rem
+        -webkit-tap-highlight-color: #ccc
+        touch-action: manipulation
+        width: 100%
         .language-image
           width: .24rem
           height: .24rem

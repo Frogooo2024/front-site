@@ -11,6 +11,7 @@ import ContactUs from '@/components/ContactUs.vue'
 import MovePageComponent from '@/components/MorePageComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 import AdvantageRow from '@/components/AdvantageRow.vue'
+import vOtherIntersection from '@/directives/intersectionOtherDirective'
 import vIntersection from '@/directives/intersectionDirective'
 
 import { getLogoImageUrl, getTitleBgImageUrl } from '@/hooks/useGetImageUrl'
@@ -22,7 +23,6 @@ const router = useRouter()
 
 const showMorePage = ref(false)
 const isMobile = ref(useIsMobile())
-
 onMounted(() => {
   window.scrollTo(0, 0)
 })
@@ -34,9 +34,7 @@ const onCloseButtonClicked = () => {
   showMorePage.value = false
 }
 const onShippingFeeCalculationClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/freight' })
-  }, 60);
+  router.push({ path: '/freight' })
 }
 
 const viewPageClicked = () => {
@@ -76,14 +74,17 @@ const viewPageClicked = () => {
         <BrandSwiper />
         <BrandSwiper :direction="'right'" v-if="isMobile" />
       </div>
-      <div class="Shipping-fee-calculation-container" v-intersection:fromName="'shipping-fee'">
+      <!-- <div class="Shipping-fee-calculation-container" v-otherIntersection:fromName="'shipping-fee'">
         <h4 class="nationwide">{{ $t('Frogooo.Nationwide') }}</h4>
         <button class="shipping-fee-calculation" @click="onShippingFeeCalculationClicked">
           {{ $t('Frogooo.ShippingFeeCalculation') }}
         </button>
-      </div>
+      </div> -->
       <div class="why-shop">
         <h1 class="why-shop-title">{{ $t('Frogooo.WhyShopOverseas') }}</h1>
+        <h3 class="why-shop-title why-shop-subtitle">
+          {{ $t('Frogooo.WhyShopOverseasSubtitle') }}
+        </h3>
       </div>
       <div class="why-shop-overseas-container">
         <WhyShopOverseas />
@@ -91,7 +92,7 @@ const viewPageClicked = () => {
       <MostAdvance />
       <AdvantageComponent v-if="isMobile" />
       <AdvantageRow v-else />
-      <ShoppingTripNow v-if="isMobile" />
+      <!-- <ShoppingTripNow v-if="isMobile" /> -->
       <div class="frogooo-logo-container" v-if="isMobile">
         <div v-intersection:fromName="'frogoooLogo'">
           <img :src="getLogoImageUrl()" alt="" class="frogooo-logo" />
@@ -102,6 +103,11 @@ const viewPageClicked = () => {
       <FooterComponent v-else />
       <div class="copy-right" v-if="isMobile">
         Copyright © 2024 All Rights Reserved. SINGAPORE FROGOOO TECH PTE. LTD.
+      </div>
+      <div class="whatsapp">
+        <a href="https://wa.me/message/UGN2RVXLNV4LH1" target="_blank" rel="noopener">
+          <img src="../assets/icons/whatsapp.png" alt="" />
+        </a>
       </div>
     </div>
   </main>
@@ -169,7 +175,7 @@ const viewPageClicked = () => {
       transform-origin: bottom right
       transform: scale(0)
       opacity: 0
-      transition: transform 0.6s ease-out, opacity 0.6s ease-out
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out
       animation: rotateBackground 5s linear infinite
 
       @keyframes rotateBackground {
@@ -207,6 +213,8 @@ const viewPageClicked = () => {
         line-height: .2rem
         color: #05FE9F
         text-shadow: 0 4px 4px #8A25C7
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3)
+        touch-action: manipulation
       .shipping-fee-calculation:active
         background: rgba(255, 255, 255, 0.3)
     .why-shop
@@ -218,6 +226,8 @@ const viewPageClicked = () => {
         font-weight: 700
         text-align: center
         color: #fff
+      .why-shop-subtitle
+        font-size: .16rem
     .frogooo-logo-container
       display: flex
       flex-direction: column
@@ -233,6 +243,15 @@ const viewPageClicked = () => {
       font-size: .1rem
       line-height: .12rem
       color: rgba(255, 255, 255, 0.4)
+    .whatsapp
+      position: fixed
+      bottom: .2rem
+      right: .1rem
+      z-index: 100
+      a
+        img
+          width: 0.4rem
+          height: 0.4rem
 @media (min-width: 1024px)
   .frogooo-container
     margin-top: 100px
@@ -295,7 +314,7 @@ const viewPageClicked = () => {
         transform-origin: bottom right
         transform: scale(0)
         opacity: 0
-        transition: transform 0.6s ease-out, opacity 0.6s ease-out
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out
         display: flex
         align-items: center
         animation: rotateBackground 5s linear infinite
@@ -343,4 +362,15 @@ const viewPageClicked = () => {
         font-weight: 700
         text-align: center
         color: #fff
+      .why-shop-subtitle
+        font-size: 28px
+    .whatsapp
+      position: fixed
+      bottom: 20px
+      right: 20px
+      z-index: 100
+      a
+        img
+          width: 56px
+          height: 56px
 </style>

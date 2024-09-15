@@ -7,7 +7,7 @@ const useBanZoom = (): void => {
 
   onMounted(() => {
     document.addEventListener(
-      'touchstart',
+      'touchend',
       (event) => {
         if (event.touches.length > 1) {
           preventDefault(event)
@@ -32,7 +32,7 @@ const useBanZoom = (): void => {
   })
 
   onUnmounted(() => {
-    document.removeEventListener('touchstart', preventDefault)
+    document.removeEventListener('touchend', preventDefault)
     document.removeEventListener('gesturestart', preventDefault)
   })
 }

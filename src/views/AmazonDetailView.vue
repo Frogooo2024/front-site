@@ -38,23 +38,48 @@ const whatsAppClicked = () => {
 const address = reactive({
   userId: userId,
   contactNumber: '83850022',
-  code: '348741',
-  detail: '3 Lorong Bakar Batu',
-  number: 'Brightway building #02-04B'
+  code: '349245',
+  detail: '158 Kallang Way',
+  number: '#06-10A'
 })
 
 const copyBtnClicked = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text)
-    showToast({
-      message: t('Frogooo.SuccessfulCopy'),
-      position: 'bottom'
-    })
-  } catch (err) {
-    showToast({
-      message: t('Frogooo.CopyFailure'),
-      position: 'bottom'
-    })
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text)
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+  } else {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      document.execCommand('copy')
+      showToast({
+        message: t('Frogooo.SuccessfulCopy'),
+        position: 'bottom'
+      })
+    } catch (err) {
+      showToast({
+        message: t('Frogooo.CopyFailure'),
+        position: 'bottom'
+      })
+    }
+
+    document.body.removeChild(textArea)
   }
 }
 
@@ -130,11 +155,11 @@ const viewPageClicked = () => {
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name country-name-red">{{ userId }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(userId ?? '')">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(userId ?? '')">Copy</button>
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.contactNumber }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.contactNumber)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.contactNumber)">Copy</button>
           </div>
           <div class="shipping-country-wraning">
             <h3 class="wraning">May be used to assist delivery</h3>
@@ -142,15 +167,15 @@ const viewPageClicked = () => {
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.code }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.code)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.code)">Copy</button>
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.detail }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.detail)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.detail)">Copy</button>
           </div>
           <div class="shipping-country-wrapper">
             <span class="shipping-country-name">{{ address.number }}</span>
-            <button class="copy" @touchstart="copyBtnClicked(address.number)">Copy</button>
+            <button class="copy" @touchend="copyBtnClicked(address.number)">Copy</button>
           </div>
         </div>
       </section>
@@ -231,30 +256,35 @@ const viewPageClicked = () => {
             </div>
           </div>
           <div class="step-input">
-            <img
-              class="step-input-image"
-              src="../assets/icons/amazon_1.png"
-              alt=""
-              @click="copyBtnClicked('83850022')"
-            />
-            <img
-              class="step-input-image"
-              src="../assets/icons/amazon_2.png"
-              alt=""
-              @click="copyBtnClicked('348741')"
-            />
-            <img
-              class="step-input-image"
-              src="../assets/icons/amazon_3.png"
-              alt=""
-              @click="copyBtnClicked('3 Lorong Bakar Batu')"
-            />
-            <img
-              class="step-input-image"
-              src="../assets/icons/amazon_4.png"
-              alt=""
-              @click="copyBtnClicked('Brightway building #02-04B')"
-            />
+            <div class="step-input step-input-margin">
+              <h3 class="step-input-title">Phone number</h3>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.contactNumber }}</span>
+                <button class="copy" @click="copyBtnClicked(address.contactNumber)">Copy</button>
+              </div>
+              <p class="step-input-info">May be used to assist delivery</p>
+            </div>
+            <div class="step-input step-input-margin">
+              <h3 class="step-input-title">Post code</h3>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.code }}</span>
+                <button class="copy" @click="copyBtnClicked(address.code)">Copy</button>
+              </div>
+            </div>
+            <div class="step-input step-input-margin">
+              <h3 class="step-input-title">Address</h3>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.detail }}</span>
+                <button class="copy" @click="copyBtnClicked(address.detail)">Copy</button>
+              </div>
+            </div>
+            <div class="step-input step-input-margin">
+              <h3 class="step-input-title">Unit Number</h3>
+              <div class="step-input-wrapper">
+                <span class="step-input-wrapper-name">{{ address.number }}</span>
+                <button class="copy" @click="copyBtnClicked(address.number)">Copy</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -520,6 +550,11 @@ const viewPageClicked = () => {
           .step-input
             display: flex
             flex-direction: column
+            .step-input-info
+              color: #0A1B39
+              font-size: 10px
+              line-height: 22px
+              margin-top: 10px
             .step-input-image
               margin-top: 10px
             .step-input-title
@@ -545,8 +580,8 @@ const viewPageClicked = () => {
               display: flex
               justify-content: space-between
               align-items: center
-              border-radius: 4px
-              border: 0.5px solid #CCCCCC
+              border-radius: 3px
+              border: 0.8px solid #949494
               padding: 8px
               width: 100%
               margin-top: 8px

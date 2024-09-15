@@ -31,6 +31,8 @@ const orderNo = ref('')
 
 let { selectedData } = useAddressStore()
 
+const eventName = isMobile ? ref('touchend') : ref('click')
+
 const paymentMethods = ref<any[]>([
   {
     imgUrl: new URL('../assets/icons/qris.png', import.meta.url).href,
@@ -226,10 +228,9 @@ const payment = async () => {
         </p>
       </section>
       <section class="button-container">
-        <button class="button" @touchstart="payment" v-if="isMobile">
+        <button class="button" v-on:[eventName]="payment" v-if="isMobile">
           {{ $t('Frogooo.Payment') }}
         </button>
-        <button class="button" @click="payment" v-else>{{ $t('Frogooo.Payment') }}</button>
       </section>
     </div>
     <FooterComponent backgroundColor="white" v-if="!isMobile" />

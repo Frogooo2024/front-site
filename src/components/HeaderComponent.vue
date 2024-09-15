@@ -92,6 +92,8 @@ const moreButtonClicked = () => emit('more-button-clicked')
 
 const isMobile = useIsMobile()
 
+const eventName = isMobile ? ref('touchend') : ref('click')
+
 const onLogoClicked = () => router.push({ path: '/' })
 
 const onJoinNow = () => {
@@ -124,17 +126,6 @@ const logOutClicked = () => {
       <img :src="getLogoImageUrl()" alt="" class="header-logo" @click="onLogoClicked" />
       <!-- <span
         v-if="!isMobile"
-        @click="tabClicked('Home')"
-        class="header-item"
-        :class="{
-          'header-item-black': backgroundColor == 'white',
-          'current-header-item': props.currentTab == 'Home',
-          'current-header-item-black': backgroundColor == 'white' && props.currentTab == 'Home'
-        }"
-        >{{ $t('Frogooo.Home') }}</span
-      > -->
-      <span
-        v-if="!isMobile"
         @click="tabClicked('Shipping Fee Calculation')"
         class="header-item"
         :class="{
@@ -144,7 +135,7 @@ const logOutClicked = () => {
             backgroundColor == 'white' && props.currentTab == 'Shipping Fee Calculation'
         }"
         >{{ $t('Frogooo.PerhitunganBiayaPengiriman') }}</span
-      >
+      > -->
       <span
         v-if="!isMobile"
         @click="tabClicked('Converter')"
@@ -200,7 +191,7 @@ const logOutClicked = () => {
           </div>
         </div>
       </div>
-      <button
+      <!-- <button
         class="header-join"
         :class="{ 'header-join-white': backgroundColor == 'white' }"
         @click="onJoinNow"
@@ -208,10 +199,10 @@ const logOutClicked = () => {
       >
         {{ $t('Frogooo.JoinNow') }}
       </button>
-      <div @click="onProfile" v-else class="personal-wrapper">
+      <a v-on:[eventName]="onProfile" v-else class="personal-wrapper">
         <img src="../assets/icons/personal.svg" alt="" v-if="backgroundColor == 'white'" />
         <img src="../assets/icons/personal_green.png" alt="" v-else />
-      </div>
+      </a> -->
       <div
         class="log-out"
         :class="{ 'log-out-white': backgroundColor == 'white' }"
@@ -280,6 +271,8 @@ const logOutClicked = () => {
           img
             width: .24rem
             height: .24rem
+        .personal-wrapper:active
+          opacity: 0.5
         img
             width: .32rem
             height: .28rem

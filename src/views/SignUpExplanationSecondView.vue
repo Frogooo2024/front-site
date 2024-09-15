@@ -9,6 +9,7 @@ import useIsMobile from '../hooks/useIsMobile'
 const router = useRouter()
 const isMobile = useIsMobile()
 const showMorePage = ref(false)
+const eventName = isMobile ? ref('touchend') : ref('click')
 
 const onMoreButtonClicked = () => {
   showMorePage.value = true
@@ -20,15 +21,11 @@ const whatsAppClicked = () => {
   window.open('https://wa.me/message/UGN2RVXLNV4LH1', '_blank')
 }
 const skipClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/signUpExplanationThird' })
-  }, 60);
+  router.push({ path: '/signUpExplanationThird' })
 }
 
 const singaporeConsigneeClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/singaporeAddress' })
-  }, 60);
+  router.push({ path: '/singaporeAddress' })
 }
 </script>
 
@@ -48,10 +45,10 @@ const singaporeConsigneeClicked = () => {
         <p>{{ $t('Frogooo.FavoriteEcommerce') }}</p>
       </section>
       <section class="singapore-consignee-container">
-        <div class="consignee-container" @click="singaporeConsigneeClicked">
+        <div class="consignee-container" v-on:[eventName]="singaporeConsigneeClicked">
           {{ $t('Frogooo.SingaporeConsignee') }}
         </div>
-        <div class="skip" @click="skipClicked">{{ $t('Frogooo.Skip') }}</div>
+        <div class="skip" v-on:[eventName]="skipClicked">{{ $t('Frogooo.Skip') }}</div>
       </section>
       <div class="singapore-image">
         <img src="../assets/icons/singapore_inset.png" alt="" v-if="isMobile" />

@@ -40,8 +40,8 @@ onMounted(async () => {
     if (selectedData.cityCode.length) {
       Promise.all([
         api.getCity({ code: 'ID' }),
-        api.getCity({ code: selectedData.provinceSelected, key: selectedData.provinceSelected }),
-        api.getCity({ code: selectedData.citySelected, key: selectedData.citySelected })
+        api.getCity({ code: selectedData.provinceCode, key: 'code' }),
+        api.getCity({ code: selectedData.cityCode, key: 'code' })
       ]).then(
         (res: any) => {
           if (res[0].status && res[1].status && res[2].status) {
@@ -50,6 +50,12 @@ onMounted(async () => {
             areaData.value = res[2].data
             pickerItems.value = provinceData.value.map((item: any) => {
               return { title: item.name, id: 'province', code: item.code }
+            })
+            cityPickerItems.value = cityData.value.map((item: any) => {
+              return { title: item.name, id: 'city', code: item.code }
+            })
+            areaPickerItems.value = areaData.value.map((item: any) => {
+              return { title: item.name, id: 'area', cost: item.countryPric, code: item.code }
             })
           }
         },
@@ -92,7 +98,7 @@ watch(selectedItem, async (newVal) => {
       showResult.value = false
       selectedData.provinceSelected = newVal.title
       selectedData.provinceCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       cityData.value = response?.data
       cityPickerItems.value = cityData.value.map((item: any) => {
         return { title: item.name, id: 'city', code: item.code }
@@ -106,7 +112,7 @@ watch(selectedItem, async (newVal) => {
       areaPickerItems.value = []
       selectedData.citySelected = newVal.title
       selectedData.cityCode = newVal.code
-      response = await api.getCity({ code: newVal.title, key: newVal.title })
+      response = await api.getCity({ code: newVal.code, key: 'code' })
       areaData.value = response?.data
       areaPickerItems.value = areaData.value.map((item: any) => {
         return { title: item.name, id: 'area', cost: item.countryPric, code: item.code }
@@ -297,6 +303,7 @@ const save = async () => {
           text-align: center
           margin: 16px 0
       .location
+        display: flex
         position: absolute
         top: 28px
         right: 32px
@@ -305,6 +312,8 @@ const save = async () => {
         justify-content: space-between
         margin-top: 16px
         .item-row-container
+          display: flex
+          flex-direction: column
           flex: 1
           .item-row-phone-wrapper
             display: flex
@@ -316,8 +325,10 @@ const save = async () => {
             color: #0a1b39
             .item-row-phone-code
               flex: 1
+              font-size: 16px
             .item-row-phone
               flex: 9
+              font-size: 16px
           .item-row-title
             font-size: 16px
             line-height: 16px
@@ -336,6 +347,7 @@ const save = async () => {
             padding: 14px 16px
             width: 100%
             color: #0a1b39
+            font-size: 16px
         .item-row-margin
           margin-right: 32px
       .item-wrapper

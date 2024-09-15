@@ -4,14 +4,12 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const onShoppingTripClicked = () => {
-  setTimeout(() => {
-    router.push({ path: '/userCenter' })
-  }, 60);
+  router.push({ path: '/userCenter' })
 }
 </script>
 <template>
   <div class="shopping-trip-container">
-    <button class="shopping-trip-button" @click="onShoppingTripClicked">
+    <button class="shopping-trip-button" @touchend="onShoppingTripClicked">
       {{ $t('Frogooo.ShoppingTrip') }}
     </button>
   </div>

@@ -35,8 +35,8 @@ const getData = () => {
   >
     <section class="footer-top">
       <img src="../assets/icons/2.0x/logo.png" alt="" class="footer-logo" />
-      <a href="https://wa.me/message/UGN2RVXLNV4LH1">
-        <img :src="getWhatsAppImageUrl()" alt="" />
+      <a href="https://wa.me/message/UGN2RVXLNV4LH1" class="footer-whats">
+        <img :src="getWhatsAppImageUrl()" alt="" class="footer-whats-app" />
       </a>
     </section>
     <div class="footer-bottom">
@@ -71,6 +71,14 @@ const getData = () => {
     align-items: center
     padding-bottom: 15px
     border-bottom: 1px solid rgba(255, 255, 255, 0.15)
+    .footer-logo
+      width: 114px
+      height: 44px
+    .footer-whats
+      display: flex
+      .footer-whats-app
+        width: 28px
+        height: 28px
   .footer-bottom
     margin-top: 20px
     display: flex
@@ -84,8 +92,12 @@ const getData = () => {
       display: flex
       justify-content: end
       align-items: center
-      img
-          margin-left: 20px
+      a
+        display: flex
+        img
+            margin-left: 20px
+            width: 28px
+            height: 28px
 .frogooo-heade-white-background
   background: #030014
 </style>

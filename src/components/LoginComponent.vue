@@ -151,7 +151,7 @@ onUnmounted(() => {
     </section>
     <section class="login">
       <button
-        @touchstart="loginClicked"
+        @touchend="loginClicked"
         class="login-button"
         :class="{
           'login-button-disable':
