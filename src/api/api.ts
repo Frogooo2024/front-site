@@ -75,8 +75,8 @@ class HttpClient {
   async googleOAuthCallback<T>(authCode: string): Promise<IResponseData<T>> {
     try {
       // Exchange authorization code for access token
-      const tokenResponse = await this.service.post<IResponseData<{ accessToken: string }>>(
-        'oauth/callback/google',
+      const tokenResponse = await this.post<IResponseData<{ accessToken: string }>>(
+        'api/googleOAuthCallback',
         { code: authCode }
       );
 
