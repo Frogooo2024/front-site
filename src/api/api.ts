@@ -71,10 +71,39 @@ class HttpClient {
     )
   }
 
-   // Add a method for handling Google OAuth callback
-  googleOAuthCallback<T>(authCode: string): Promise<IResponseData<T>> {
-    // Send authCode to your backend API to exchange it for an access token
-    return this.service.post('oauth/callback/google', { code: authCode })
+   // Method for handling Google OAuth callback
+  async googleOAuthCallback<T>(authCode: string): Promise<IResponseData<T>> {
+    try {
+      // Exchange authorization code for access token
+      const tokenResponse = await this.service.post<IResponseData<{ accessToken: string }>>(
+        'oauth/callback/google',
+        { code: authCode }
+      );
+
+      if (tokenResponse.data.success) {
+        // Fetch user info using the access token
+        const userInfo = await this.getGoogleUserInfo(tokenResponse.data.data.accessToken);
+        return { ...tokenResponse.data, data: userInfo };
+      } else {
+        throw new Error(tokenResponse.data.message || 'Error during OAuth callback');
+      }
+    } catch (error) {
+      console.error('Error during Google OAuth callback:', error);
+      throw error;
+    }
+  }
+
+  // Method to fetch google account info from Google
+  private async getGoogleUserInfo(accessToken: string): Promise<any> {
+    try {
+      const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching Google user info:', error);
+      throw error;
+    }
   }
 
   get<T>(url: string, params?: Record<string, unknown>): Promise<IResponseData<T>> {
