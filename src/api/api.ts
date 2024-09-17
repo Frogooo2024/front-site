@@ -71,21 +71,20 @@ class HttpClient {
     )
   }
 
-   // Method for handling Google OAuth callback
+  // handle the google callback
   async googleOAuthCallback<T>(authCode: string): Promise<IResponseData<T>> {
     try {
-      // Exchange authorization code for access token
-      const tokenResponse = await this.post<IResponseData<{ accessToken: string }>>(
-        'api/googleOAuthCallback',
+      const response = await this.service.post<IResponseData<{ accessToken: string }>>(
+        'api/googleOAuthCallback',  // Ensure this matches your backend route
         { code: authCode }
       );
 
-      if (tokenResponse.data.success) {
+      if (response.success) {
         // Fetch user info using the access token
-        const userInfo = await this.getGoogleUserInfo(tokenResponse.data.data.accessToken);
-        return { ...tokenResponse.data, data: userInfo };
+        const userInfo = await this.getGoogleUserInfo(response.data.data.accessToken);
+        return { ...response, data: userInfo };
       } else {
-        throw new Error(tokenResponse.data.message || 'Error during OAuth callback');
+        throw new Error(response.message || 'Error during OAuth callback');
       }
     } catch (error) {
       console.error('Error during Google OAuth callback:', error);
@@ -93,7 +92,7 @@ class HttpClient {
     }
   }
 
-  // Method to fetch google account info from Google
+  // Use access token to get the google account info
   private async getGoogleUserInfo(accessToken: string): Promise<any> {
     try {
       const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
