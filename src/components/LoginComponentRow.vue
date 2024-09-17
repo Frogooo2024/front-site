@@ -96,6 +96,38 @@ const googleLoginClicked = () => {
   window.location.href =
     'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=441778662728-adegcjs560s4l8ag1tljk399h472hp6b.apps.googleusercontent.com&redirect_uri=https://api.frogooo.cangkugou.cn/loginByGoogleCallback&access_type=offline&scope=email%20profile%20openid&prompt=select_account'
 }
+
+  // Add google OAuth Login and handle the callback scenario
+  const handleGoogleCallback = async () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const authCode = urlParams.get('code')
+
+  if (authCode) {
+    try {
+      const response = await api.googleOAuthCallback(authCode)
+      if (response.status) {
+        localStorage.setItem('frogoooToken', response.data.token)
+        router.replace({ path: '/userCenter' })
+      } else {
+        showToast({
+          message: response.msg || 'Google login failed',
+          position: 'bottom'
+        })
+      }
+    } catch (error: any) {
+      showToast({
+        message: error.msg || 'An error occurred during Google login',
+        position: 'bottom'
+      })
+    }
+  }
+}
+
+onMounted(() => {
+  if (window.location.pathname === '/oauth/callback/google') {
+    handleGoogleCallback()
+  }
+})
 </script>
 
 <template>
@@ -156,7 +188,9 @@ const googleLoginClicked = () => {
       <span class="sign-up-description">{{ $t('Frogooo.DonNotHaveAnAccount') }}</span>
       <span class="sign-up" @click="onSignUp">{{ $t('Frogooo.SignUp') }}</span>
     </section>
-    <!-- <section class="or-other-container">
+    
+    <!-- Google OAuth Login -->
+    <section class="or-other-container">
       <span class="other-line"></span>
       <span class="other-text">{{ $t('Frogooo.OrLoginWith') }}</span>
       <span class="other-line"></span>
@@ -164,7 +198,7 @@ const googleLoginClicked = () => {
     <div class="continue-with-google" @click="googleLoginClicked">
       <img src="../assets/icons/google.png" alt="" />
       <span class="continue-text">{{ $t('Frogooo.ContinueWithGoogle') }}</span>
-    </div> -->
+    </div>
   </div>
 </template>
 
