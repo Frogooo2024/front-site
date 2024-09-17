@@ -71,6 +71,12 @@ class HttpClient {
     )
   }
 
+   // Add a method for handling Google OAuth callback
+  googleOAuthCallback<T>(authCode: string): Promise<IResponseData<T>> {
+    // Send authCode to your backend API to exchange it for an access token
+    return this.service.post('oauth/callback/google', { code: authCode })
+  }
+
   get<T>(url: string, params?: Record<string, unknown>): Promise<IResponseData<T>> {
     return this.service.get(url, params)
   }
