@@ -90,44 +90,62 @@ const loginClicked = async () => {
   }
 }
 
-const googleLoginClicked = () => {
+const googleLoginClickedOld = () => {
   // window.location.href =
   //   'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=441778662728-adegcjs560s4l8ag1tljk399h472hp6b.apps.googleusercontent.com&redirect_uri=https://api.frogooo.cangkugou.cn/loginByGoogleCallback&access_type=offline&scope=email%20profile%20openid&prompt=select_account'
   window.location.href =
     'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=441778662728-adegcjs560s4l8ag1tljk399h472hp6b.apps.googleusercontent.com&redirect_uri=https://api.frogooo.cangkugou.cn/oauth/callback/google&access_type=offline&scope=email%20profile%20openid&prompt=select_account'
 }
 
-// To handle the google oauth call
-const handleGoogleCallback = async () => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const authCode = urlParams.get('code')
+// Create a function to initiate the Google OAuth login
+const googleLoginClicked = async () => {
+  try {
+    // Redirect to Google's OAuth endpoint
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const redirectUri = `${window.location.origin}/oauth/callback`; // Define your callback URL
+    const authEndpoint = `https://accounts.google.com/o/oauth2/v2/auth`;
+    
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      scope: 'openid email profile',
+    });
+
+    // Redirect the user to Google's OAuth consent page
+    window.location.href = `${authEndpoint}?${params.toString()}`;
+  } catch (error) {
+    console.error('Error during Google OAuth login:', error);
+  }
+};
+
+// After redirecting back from Google with the auth code, handle the callback
+const handleOAuthCallback = async () => {
+  const queryParams = new URLSearchParams(window.location.search);
+  const authCode = queryParams.get('code');
 
   if (authCode) {
     try {
-      const response = await api.googleOAuthCallback(authCode)
-      if (response.status) {
-        localStorage.setItem('frogoooToken', response.data.token)
-        router.replace({ path: '/userCenter' })
+      // Call the backend OAuth callback to exchange code for access token
+      const response = await api.googleOAuthCallback(authCode);
+      
+      if (response.success) {
+        // Successfully logged in, now redirect to the dashboard or another protected route
+        router.push('/dashboard');
       } else {
-        showToast({
-          message: response.msg || 'Google login failed',
-          position: 'bottom'
-        })
+        console.error('Login failed:', response.message);
       }
-    } catch (error: any) {
-      showToast({
-        message: error.msg || 'An error occurred during Google login',
-        position: 'bottom'
-      })
+    } catch (error) {
+      console.error('Error handling OAuth callback:', error);
     }
   }
+};
+
+// Call the handleOAuthCallback function if we are on the callback route
+if (window.location.pathname === '/oauth/callback') {
+  handleOAuthCallback();
 }
 
-onMounted(() => {
-  if (window.location.pathname === '/oauth/callback/google') {
-    handleGoogleCallback()
-  }
-})
 
 const scrollFn = () => {
   window.scrollTo({ left: 0, top: 0, behavior: 'smooth' })
