@@ -191,7 +191,7 @@ const logOutClicked = () => {
           </div>
         </div>
       </div>
-      <!-- <button
+      <button
         class="header-join"
         :class="{ 'header-join-white': backgroundColor == 'white' }"
         @click="onJoinNow"
@@ -202,7 +202,7 @@ const logOutClicked = () => {
       <a v-on:[eventName]="onProfile" v-else class="personal-wrapper">
         <img src="../assets/icons/personal.svg" alt="" v-if="backgroundColor == 'white'" />
         <img src="../assets/icons/personal_green.png" alt="" v-else />
-      </a> -->
+      </a>
       <div
         class="log-out"
         :class="{ 'log-out-white': backgroundColor == 'white' }"
