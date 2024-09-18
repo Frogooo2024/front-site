@@ -153,7 +153,8 @@ class HttpClient {
   getCity<T>(params?: Record<string, unknown>): Promise<IResponseData<T>> {
     if (params?.key) {
       return this.service.get(
-        `cangkugou/country/getParentCodeToChild?code=${params?.code}&key=${params?.key}`
+        //`cangkugou/country/getParentCodeToChild?code=${params?.code}&key=${params?.key}`
+        `api/Province/${params?.code}/City/${params?.key}`
       )
     } else {
       return this.service.get(`cangkugou/country/getParentCodeToChild?code=${params?.code}`)
