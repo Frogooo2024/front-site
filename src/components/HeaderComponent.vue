@@ -124,7 +124,7 @@ const logOutClicked = () => {
   >
     <section class="header-left">
       <img :src="getLogoImageUrl()" alt="" class="header-logo" @click="onLogoClicked" />
-      <!-- <span
+      <span
         v-if="!isMobile"
         @click="tabClicked('Shipping Fee Calculation')"
         class="header-item"
@@ -135,7 +135,7 @@ const logOutClicked = () => {
             backgroundColor == 'white' && props.currentTab == 'Shipping Fee Calculation'
         }"
         >{{ $t('Frogooo.PerhitunganBiayaPengiriman') }}</span
-      > -->
+      >
       <span
         v-if="!isMobile"
         @click="tabClicked('Converter')"
