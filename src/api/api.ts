@@ -71,39 +71,56 @@ class HttpClient {
     )
   }
 
-  // handle the google callback
+  // Handle the Google OAuth callback and access token exchange
   async googleOAuthCallback<T>(authCode: string): Promise<IResponseData<T>> {
     try {
       const response = await this.service.post<IResponseData<{ accessToken: string }>>(
-        'api/googleOAuthCallback',  // Ensure this matches your backend route
+        'api/googleOAuthCallback', // Ensure this matches your backend route
         { code: authCode }
       );
-
-      if (response.success) {
-        // Fetch user info using the access token
-        const userInfo = await this.getGoogleUserInfo(response.data.data.accessToken);
-        return { ...response, data: userInfo };
-      } else {
-        throw new Error(response.message || 'Error during OAuth callback');
+  
+      // Check if response status is 200 and handle token
+      if (response?.status === 200) {
+        const accessToken = response.data?.data.accessToken;
+        if (accessToken) {
+          // Fetch user info using the access token
+          const userInfo = await this.getGoogleUserInfo(accessToken);
+          return { success: true, data: userInfo };
+        }
+      } else if (response?.status === 401) {
+        // Handle unauthorized response
+        window.localStorage.setItem('frogoooToken', '');
+        window.localStorage.setItem('frogoooIsLogin', 'false');
+        router.replace({ path: '/login' });
       }
+  
+      // Return error if unsuccessful
+      return Promise.reject(response.data);
     } catch (error) {
       console.error('Error during Google OAuth callback:', error);
-      throw error;
+      return Promise.reject(error);
     }
   }
-
+  
   // Use access token to get the google account info
   private async getGoogleUserInfo(accessToken: string): Promise<any> {
     try {
       const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
-      return response.data;
+  
+      // Check if response status is 200
+      if (response?.status === 200) {
+        return response.data;
+      } else {
+        return Promise.reject('Failed to fetch Google user info');
+      }
     } catch (error) {
       console.error('Error fetching Google user info:', error);
-      throw error;
+      return Promise.reject(error);
     }
   }
+
 
   get<T>(url: string, params?: Record<string, unknown>): Promise<IResponseData<T>> {
     return this.service.get(url, params)
