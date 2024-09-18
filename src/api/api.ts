@@ -150,14 +150,31 @@ class HttpClient {
     )
   }
 
-  getCity<T>(params?: Record<string, unknown>): Promise<IResponseData<T>> {
+  getCityOld<T>(params?: Record<string, unknown>): Promise<IResponseData<T>> {
     if (params?.key) {
       return this.service.get(
-        //`cangkugou/country/getParentCodeToChild?code=${params?.code}&key=${params?.key}`
-        `api/Province/${params?.code}/City/${params?.key}`
+        `cangkugou/country/getParentCodeToChild?code=${params?.code}&key=${params?.key}`
       )
     } else {
       return this.service.get(`cangkugou/country/getParentCodeToChild?code=${params?.code}`)
+    }
+  }
+
+  getCity<T>(params?: Record<string, unknown>): Promise<IResponseData<T>> {
+    const baseURL = params?.customBaseURL || 'https://frogooo.com/'; // Use default or custom base URL
+  
+    // Create a new Axios instance with the custom base URL
+    const customAxiosInstance = axios.create({
+      baseURL: baseURL, // Custom base URL
+    });
+  
+    // Use the customAxiosInstance to make the GET request
+    if (params?.key) {
+      return customAxiosInstance.get(
+        `api/Province/${params?.code}/City/${params?.key}`
+      );
+    } else {
+      return customAxiosInstance.get(`api/Province/${params?.code}`);
     }
   }
 
