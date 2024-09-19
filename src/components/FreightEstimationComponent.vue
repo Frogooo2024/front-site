@@ -38,7 +38,7 @@ onMounted(async () => {
       ]).then(
         (res: any) => {
           if (res[0].status && res[1].status && res[2].status) {
-            provinceData.value = res[0].data
+            provinceData.value = res[0].data.data
             cityData.value = res[1].data
             areaData.value = res[2].data
           }
@@ -51,8 +51,8 @@ onMounted(async () => {
         }
       )
     } else {
-      response = await api.getCity({ code: 'ID' })
-      provinceData.value = response?.data
+      response = await api.getCity()
+      provinceData.value = response?.data.data
     }
   } catch (e) {
     showToast({
@@ -72,8 +72,15 @@ const selectProvinceClicked = () => {
   if (provinceData.value.length) {
     showTray.value = true
     pickerItems.value = provinceData.value.map((item: any) => {
-      return { title: item.name, id: 'province', code: item.code }
-    })
+      return { 
+        title: item.name,
+         id: 'province', 
+         code: item.id 
+      }
+    });
+  }
+  else {
+    console.error('Province data is empty');
   }
 }
 
@@ -81,7 +88,10 @@ const selectCityClicked = () => {
   if (cityData.value.length) {
     showTray.value = true
     pickerItems.value = cityData.value.map((item: any) => {
-      return { title: item.name, id: 'city', code: item.code }
+      return { 
+        title: item.name, 
+        id: 'city', 
+        code: item.id }
     })
   }
 }
@@ -125,8 +135,8 @@ watch(selectedItem, async (newVal) => {
       areaData.value = []
       selectedData.provinceSelected = newVal.title
       selectedData.provinceCode = newVal.code
-      response = await api.getCity({ code: newVal.code, key: 'code' })
-      cityData.value = response?.data
+      response = await api.getCity({ provinceId: newVal.code, key: 'code' })
+      cityData.value = response?.data.data
     }
   } else if (newVal.id == 'city') {
     if (selectedData.citySelected != newVal.title) {
@@ -135,8 +145,8 @@ watch(selectedItem, async (newVal) => {
       areaData.value = []
       selectedData.citySelected = newVal.title
       selectedData.cityCode = newVal.code
-      response = await api.getCity({ code: newVal.code, key: 'code' })
-      areaData.value = response?.data
+      response = await api.getCity({ cityId: newVal.code, provinceId: selectedData.provinceCode, key: 'code' })
+      areaData.value = response?.data.data
     }
   } else if (newVal.id == 'area') {
     selectedData.areaSelected = newVal.title
