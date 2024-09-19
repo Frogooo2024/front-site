@@ -168,13 +168,21 @@ class HttpClient {
       baseURL: baseURL, // Custom base URL
     });
   
-    // Use the customAxiosInstance to make the GET request
-    if (params?.key) {
+    // Scenario 1: Get area based on city and province ID
+    if (params?.cityId && params?.provinceId) {
       return customAxiosInstance.get(
-        `api/Province/${params?.code}/City/${params?.key}`
+        `api/Province/${params?.provinceId}/City/${params?.cityId}`
       );
-    } else {
-      return customAxiosInstance.get(`api/Province/${params?.code}`);
+    }
+    // Scenario 2: Get cities based on province ID
+    else if (params?.provinceId) {
+      return customAxiosInstance.get(
+        `api/Province/${params?.provinceId}`
+      );
+    }
+    // Scenario 3: Get all provinces
+    else {
+      return customAxiosInstance.get('api/Province');
     }
   }
 
