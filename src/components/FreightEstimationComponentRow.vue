@@ -91,9 +91,11 @@ const onSelectItemClicked = (event: any) => {
       return {
         title: item.name,
         id: 'area',
-        cost: item.countryPric,
+        //cost: item.countryPric,
+        cost: item.fees,
         code: item.id,
-        crossPric: item.crossPric
+        //crossPric: item.crossPric
+        crossPric: item.internationalFees
       }
     })
   } else if (event == 'area' && !areaData.value.length) {
