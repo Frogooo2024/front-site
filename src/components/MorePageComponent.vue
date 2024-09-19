@@ -28,10 +28,10 @@ const listItems = ref([
     title: 'Frogooo.Home',
     flag: 'home'
   },
-  // {
-  //   title: 'Frogooo.ShippingFeeCalculation',
-  //   flag: 'shippingFeeCalculation'
-  // },
+   {
+     title: 'Frogooo.ShippingFeeCalculation',
+     flag: 'shippingFeeCalculation'
+   },
   {
     title: 'Frogooo.ContactUs',
     flag: 'contactUs'
