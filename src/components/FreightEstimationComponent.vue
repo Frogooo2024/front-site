@@ -103,9 +103,11 @@ const selectAreaClicked = () => {
       return {
         title: item.name,
         id: 'area',
-        cost: item.countryPric,
-        code: item.code,
-        crossPric: item.crossPric
+        //cost: item.countryPric,
+        cost: item.fees,
+        code: item.id,
+        //crossPric: item.crossPric
+        crossPric: item.internationalFees
       }
     })
   }
