@@ -36,14 +36,14 @@ onMounted(async () => {
         //api.getCity({ code: selectedData.provinceCode, key: 'code' }),
         //api.getCity({ code: selectedData.cityCode, key: 'code' })
         api.getCity(), // Get all provinces
-        api.getCity({ provinceId: selectedData.provinceCode }), // Get cities by province ID
+        api.getCityName({ provinceId: selectedData.provinceCode }), // Get cities by province ID
         api.getCity({ provinceId: selectedData.provinceCode, cityId: selectedData.cityCode })
       ]).then(
         (res: any) => {
           if (res[0].status && res[1].status && res[2].status) {
-            provinceData.value = res[0].data
-            cityData.value = res[1].data
-            areaData.value = res[2].data
+            provinceData.value = res[0].data.data
+            cityData.value = res[1].data.data
+            areaData.value = res[2].data.data
           }
         },
         (e: any) => {
@@ -54,8 +54,8 @@ onMounted(async () => {
         }
       )
     } else {
-      response = await api.getCity({ code: 'ID' })
-      provinceData.value = response?.data
+      response = await api.getCity()
+      provinceData.value = response?.data.data
     }
   } catch (e) {
     showToast({
@@ -68,13 +68,19 @@ onMounted(async () => {
 const onSelectItemClicked = (event: any) => {
   if (event == 'province' && provinceData.value.length) {
     pickerItems.value = provinceData.value.map((item: any) => {
-      return { title: item.name, id: 'province', code: item.code }
+      return { 
+        title: item.name, 
+        id: 'province', 
+        code: item.id }
     })
   }
 
   if (event == 'city' && cityData.value.length) {
     cityPickerItems.value = cityData.value.map((item: any) => {
-      return { title: item.name, id: 'city', code: item.code }
+      return { 
+        title: item.name, 
+        id: 'city', 
+        code: item.id }
     })
   } else if (event == 'city' && !cityData.value.length) {
     cityPickerItems.value = []
@@ -86,7 +92,7 @@ const onSelectItemClicked = (event: any) => {
         title: item.name,
         id: 'area',
         cost: item.countryPric,
-        code: item.code,
+        code: item.id,
         crossPric: item.crossPric
       }
     })
@@ -122,8 +128,8 @@ watch(selectedItem, async (newVal) => {
       showResult.value = false
       selectedData.provinceSelected = newVal.title
       selectedData.provinceCode = newVal.code
-      response = await api.getCity({ code: newVal.code, key: 'code' })
-      cityData.value = response?.data
+      response = await api.getCity({ provinceId: newVal.code, key: 'code' })
+      cityData.value = response?.data.data
     }
   } else if (newVal.id == 'city') {
     if (selectedData.citySelected != newVal.title) {
@@ -134,8 +140,8 @@ watch(selectedItem, async (newVal) => {
       areaPickerItems.value = []
       selectedData.citySelected = newVal.title
       selectedData.cityCode = newVal.code
-      response = await api.getCity({ code: newVal.code, key: 'code' })
-      areaData.value = response?.data
+      response = await api.getCity({ cityId: newVal.code, provinceId: selectedData.provinceCode, key: 'code' })
+      areaData.value = response?.data.data
     }
   } else if (newVal.id == 'area') {
     selectedData.areaSelected = newVal.title
