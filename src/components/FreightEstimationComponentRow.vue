@@ -32,9 +32,12 @@ onMounted(async () => {
   try {
     if (selectedData.cityCode.length) {
       Promise.all([
-        api.getCity({ code: 'ID' }),
-        api.getCity({ code: selectedData.provinceCode, key: 'code' }),
-        api.getCity({ code: selectedData.cityCode, key: 'code' })
+        //api.getCity({ code: 'ID' }),
+        //api.getCity({ code: selectedData.provinceCode, key: 'code' }),
+        //api.getCity({ code: selectedData.cityCode, key: 'code' })
+        api.getCity(), // Get all provinces
+        api.getCity({ provinceId: selectedData.provinceCode }), // Get cities by province ID
+        api.getCity({ provinceId: selectedData.provinceCode, cityId: selectedData.cityCode })
       ]).then(
         (res: any) => {
           if (res[0].status && res[1].status && res[2].status) {
