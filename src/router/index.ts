@@ -167,6 +167,16 @@ const router = createRouter({
       path: '/privacy',
       name: 'privacy',
       component: () => import('../views/PrivacyView.vue')
+    },
+    {
+      path: '/privacypolicy',
+      name: 'privacypolicy',
+      component: () => import('../views/PrivacyPolicyView.vue')
+    },
+    {
+      path: '/termsservice',
+      name: 'termsservice',
+      component: () => import('../views/TermsServiceView.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {
