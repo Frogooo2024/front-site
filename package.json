@@ -16,11 +16,13 @@
   "dependencies": {
     "animate.css": "^4.1.1",
     "axios": "^1.7.2",
+    "google-auth-library": "^9.14.1",
     "pinia": "^2.1.7",
     "vant": "^4.9.2",
     "vue": "^3.4.21",
     "vue-i18n": "^9.13.1",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue3-google-login": "^2.0.33"
   },
   "devDependencies": {
     "@rollup/rollup-win32-x64-msvc": "^4.21.2",
