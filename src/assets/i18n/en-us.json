@@ -229,5 +229,7 @@
     "SwitchRegion": "Must switch region to singapore",
     "SwitchLanguage": "Switch your language:",
     "ChangeEnglish": "Click “语言” button to change to English"
+    "PrivacyPolicy": "Privacy Policy",
+    "TermsOfService": "Terms Of Service"
   }
 }
