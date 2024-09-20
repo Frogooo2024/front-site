@@ -158,6 +158,14 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('focusout', scrollFn)
 })
+
+const onPrivacyPolicy = () => {
+  router.push({ path: '/privacypolicy' })
+}
+
+const onTermsOfService = () => {
+  router.push({ path: '/termsservice' })
+}
 </script>
 
 <template>
@@ -229,6 +237,12 @@ onUnmounted(() => {
       <img src="../assets/icons/google.png" alt="" />
       <span class="continue-text">{{ $t('Frogooo.ContinueWithGoogle') }}</span>
     </div>
+    
+    <!-- Privacy Policy and Terms of Service Links -->
+    <section class="policy-links-container">
+      <a class="policy-link" @click="onPrivacyPolicy">{{ $t('Frogooo.PrivacyPolicy') }}</a>
+      <a class="policy-link" @click="onTermsOfService">{{ $t('Frogooo.TermsOfService') }}</a>
+    </section>
   </div>
 </template>
 
@@ -352,4 +366,20 @@ onUnmounted(() => {
         .continue-text
             font-size: .14rem
             line-height: .2rem
+
+  .policy-links-container
+            display: flex
+            justify-content: center
+            margin-top: 16px
+            gap: 16px
+        
+        .policy-link
+            font-size: 14px
+            line-height: 20px
+            color: #05FE9F
+            cursor: pointer
+            text-decoration: none
+        
+        .policy-link:hover
+            text-decoration: underline
 </style>
