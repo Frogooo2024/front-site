@@ -145,6 +145,14 @@ const handleOAuthCallback = async () => {
 if (window.location.pathname === '/oauth/callback') {
   handleOAuthCallback();
 }
+
+const onPrivacyPolicy = () => {
+  router.push({ path: '/privacypolicy' })
+}
+
+const onTermsOfService = () => {
+  router.push({ path: '/termsservice' })
+}
 </script>
 
 <template>
@@ -216,6 +224,11 @@ if (window.location.pathname === '/oauth/callback') {
       <img src="../assets/icons/google.png" alt="" />
       <span class="continue-text">{{ $t('Frogooo.ContinueWithGoogle') }}</span>
     </div>
+    <!-- Privacy Policy and Terms of Service Links -->
+    <section class="policy-links-container">
+      <a class="policy-link" @click="onPrivacyPolicy">{{ $t('Frogooo.PrivacyPolicy') }}</a>
+      <a class="policy-link" @click="onTermsOfService">{{ $t('Frogooo.TermsOfService') }}</a>
+    </section>
   </div>
 </template>
 
@@ -348,4 +361,20 @@ if (window.location.pathname === '/oauth/callback') {
             font-size: 18px
             line-height: 25px
             color: #fff
+
+  .policy-links-container
+            display: flex
+            justify-content: center
+            margin-top: 16px
+            gap: 16px
+        
+        .policy-link
+            font-size: 14px
+            line-height: 20px
+            color: #05FE9F
+            cursor: pointer
+            text-decoration: none
+        
+        .policy-link:hover
+            text-decoration: underline
 </style>
