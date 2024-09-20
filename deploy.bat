@@ -9,6 +9,7 @@ cd /d %~dp0
 call npm run build
 cd dist
 call tar -czvf %~dp0%svcname% *.* 
+cd ..
 
 plink -batch -pw %psd% %user%@%host% "mkdir -p %root%/%service%"
 pscp -batch -pw %psd% %~dp0%svcname% %user%@%host%:%root%/%service%/%svcname%
