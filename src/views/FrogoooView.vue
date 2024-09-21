@@ -74,12 +74,12 @@ const viewPageClicked = () => {
         <BrandSwiper />
         <BrandSwiper :direction="'right'" v-if="isMobile" />
       </div>
-      <!-- <div class="Shipping-fee-calculation-container" v-otherIntersection:fromName="'shipping-fee'">
+      <div class="Shipping-fee-calculation-container" v-otherIntersection:fromName="'shipping-fee'">
         <h4 class="nationwide">{{ $t('Frogooo.Nationwide') }}</h4>
         <button class="shipping-fee-calculation" @click="onShippingFeeCalculationClicked">
           {{ $t('Frogooo.ShippingFeeCalculation') }}
         </button>
-      </div> -->
+      </div>
       <div class="why-shop">
         <h1 class="why-shop-title">{{ $t('Frogooo.WhyShopOverseas') }}</h1>
         <h3 class="why-shop-title why-shop-subtitle">
