@@ -4,8 +4,14 @@ import { useRouter } from 'vue-router'
 import api from '../api/api'
 import { useUserIdStore } from '../stores/userId'
 import { showToast } from 'vant'
+import { googleTokenLogin } from 'vue3-google-login'
+import { fetchGoogleUserInfo } from '../api/fetchGoogleUserInfo'
 
 import 'vant/lib/index.css'
+
+const GOOGLE_CLIENT_ID = '425446394310-9rlf49t3o4r8odam96q5itlhqvu4kef2.apps.googleusercontent.com'
+const userInfo = ref<GoogleUserInfo | null>(null);
+const googleaccesstoken = ref()
 
 const emit = defineEmits(['login-clicked'])
 
@@ -97,53 +103,21 @@ const googleLoginClickedold = () => {
     'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=441778662728-adegcjs560s4l8ag1tljk399h472hp6b.apps.googleusercontent.com&redirect_uri=https://api.frogooo.cangkugou.cn/loginByGoogleCallback&access_type=offline&scope=email%20profile%20openid&prompt=select_account'
 }
 
-// Create a function to initiate the Google OAuth login
-const googleLoginClicked = async () => {
-  try {
-    // Redirect to Google's OAuth endpoint
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    const redirectUri = `${window.location.origin}/oauth/callback`; // Define your callback URL
-    const authEndpoint = `https://accounts.google.com/o/oauth2/v2/auth`;
-    
-    const params = new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      response_type: 'code',
-      scope: 'openid email profile',
-    });
+const handleGoogleAccessTokenLogin = () => {
+  googleTokenLogin({
+    clientId: GOOGLE_CLIENT_ID
+  }).then(async (response) => {
+    googleaccesstoken.value = response.access_token
+    // Fetch user info with the access token
+    userInfo.value = await fetchGoogleUserInfo(googleaccesstoken.value);
 
-    // Redirect the user to Google's OAuth consent page
-    window.location.href = `${authEndpoint}?${params.toString()}`;
-  } catch (error) {
-    console.error('Error during Google OAuth login:', error);
-  }
-};
-
-// After redirecting back from Google with the auth code, handle the callback
-const handleOAuthCallback = async () => {
-  const queryParams = new URLSearchParams(window.location.search);
-  const authCode = queryParams.get('code');
-
-  if (authCode) {
-    try {
-      // Call the backend OAuth callback to exchange code for access token
-      const response = await api.googleOAuthCallback(authCode);
-      
-      if (response.success) {
-        // Successfully logged in, now redirect to the dashboard or another protected route
-        router.push('/dashboard');
-      } else {
-        console.error('Login failed:', response.message);
-      }
-    } catch (error) {
-      console.error('Error handling OAuth callback:', error);
-    }
-  }
-};
-
-// Call the handleOAuthCallback function if we are on the callback route
-if (window.location.pathname === '/oauth/callback') {
-  handleOAuthCallback();
+    //const { setUserId } = useUserIdStore()
+    //localStorage.setItem('frogoooUserId', userInfo.value?.given_name?.userInfo.value.family_name)
+    //setUserId(userInfo.value?.given_name?.family_name)
+    //localStorage.setItem('frogoooIsLogin', 'true')
+    //localStorage.setItem('frogoooToken', loginData.data?.token)
+    //router.replace({ path: '/userCenter' })
+  })
 }
 
 const onPrivacyPolicy = () => {
@@ -220,7 +194,7 @@ const onTermsOfService = () => {
       <span class="other-text">{{ $t('Frogooo.OrLoginWith') }}</span>
       <span class="other-line"></span>
     </section>
-    <div class="continue-with-google" @click="googleLoginClicked">
+    <div class="continue-with-google" @click="handleGoogleAccessTokenLogin">
       <img src="../assets/icons/google.png" alt="" />
       <span class="continue-text">{{ $t('Frogooo.ContinueWithGoogle') }}</span>
     </div>
